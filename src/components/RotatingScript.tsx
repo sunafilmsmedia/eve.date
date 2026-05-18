@@ -6,6 +6,7 @@ const WORDS = [
   "sublimées",
   "romantisées",
   "organisées",
+  "imaginées",
   "enchantées",
   "réinventées",
   "inspirées",
