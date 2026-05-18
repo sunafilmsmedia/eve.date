@@ -44,6 +44,29 @@ body {
   animation: pulse-dot 2s infinite;
 }
 
+@keyframes heart-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(0deg) scale(0.5);
+  }
+  20% {
+    opacity: var(--peak-opacity, 0.6);
+    transform: translate(-50%, -50%) rotate(calc(var(--rot, 0deg) * 0.3)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+        calc(-50% + var(--dx, 0px)),
+        calc(-50% + var(--dy, 0px))
+      )
+      rotate(var(--rot, 0deg)) scale(0.85);
+  }
+}
+
+.heart-float {
+  animation: heart-float 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .fade-in {
   opacity: 0;
   transform: translateY(24px);

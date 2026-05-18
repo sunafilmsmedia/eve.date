@@ -21,7 +21,7 @@ export function Hero() {
         <h1 className="font-sans text-[40px] sm:text-[56px] md:text-[78px] font-extrabold leading-[1.05] tracking-[0.02em] text-charcoal mb-3">
           Tes prochaines sorties
           <RotatingScript className="block text-[64px] sm:text-[96px] md:text-[132px] text-rose leading-[0.9] my-1.5" />
-          Eve AI
+          Imaginées par Eve AI
         </h1>
 
         <p className="font-script text-[28px] sm:text-[36px] md:text-[42px] text-muted mb-8 leading-[1.1]">
