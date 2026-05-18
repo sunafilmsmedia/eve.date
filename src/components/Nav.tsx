@@ -1,4 +1,29 @@
-export function Nav() {
+import { createClient } from "@/utils/supabase/server";
+
+async function getAuthState() {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return { user: null, isAdmin: false };
+  }
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  const isAdmin = Boolean(
+    user?.email && adminEmails.includes(user.email.toLowerCase())
+  );
+  return { user, isAdmin };
+}
+
+export async function Nav() {
+  const { user, isAdmin } = await getAuthState();
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-12 py-[18px] bg-cream/85 backdrop-blur-md border-b border-rose/10">
       <div className="font-script text-[32px] md:text-[38px] text-charcoal leading-none">
@@ -40,14 +65,44 @@ export function Nav() {
             Suggestions
           </a>
         </li>
-        <li>
-          <a
-            href="#waitlist"
-            className="bg-charcoal text-cream px-[22px] py-3 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-rose hover:text-white transition-colors"
-          >
-            Rejoindre
-          </a>
-        </li>
+        {isAdmin ? (
+          <li>
+            <a
+              href="/dashboard"
+              className="bg-charcoal text-cream px-[22px] py-3 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-rose hover:text-white transition-colors"
+            >
+              Dashboard
+            </a>
+          </li>
+        ) : user ? (
+          <li>
+            <a
+              href="/dashboard"
+              className="bg-charcoal text-cream px-[22px] py-3 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-rose hover:text-white transition-colors"
+            >
+              Mon compte
+            </a>
+          </li>
+        ) : (
+          <>
+            <li>
+              <a
+                href="/login"
+                className="text-[11px] font-semibold text-muted tracking-[0.16em] hover:text-rose transition-colors"
+              >
+                Connexion
+              </a>
+            </li>
+            <li>
+              <a
+                href="#waitlist"
+                className="bg-charcoal text-cream px-[22px] py-3 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-rose hover:text-white transition-colors"
+              >
+                Rejoindre
+              </a>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
