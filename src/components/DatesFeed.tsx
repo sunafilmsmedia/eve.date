@@ -1,10 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Script } from "./Script";
-import { DATES, starsString, type DateIdea } from "@/lib/dates";
+import { ChatWithEve } from "./ChatWithEve";
+import {
+  DATES,
+  CATEGORIES,
+  starsString,
+  type DateIdea,
+  type DateOccasion,
+  type Season,
+  type DateCategory,
+} from "@/lib/dates";
 
 type Status = "single" | "couple";
 type Partner = {
@@ -21,22 +30,37 @@ const HEADER_VARIANTS = {
   dark: "bg-gradient-to-br from-[#3a2e28] to-charcoal",
 };
 
-const FILTERS: { v: string; label: string }[] = [
-  { v: "all", label: "Tout" },
-  { v: "first-date", label: "1ères dates" },
-  { v: "anniversary", label: "Anniversaire" },
-  { v: "nature", label: "Nature" },
-  { v: "gastronomy", label: "Gastronomie" },
-  { v: "winter", label: "Hiver" },
-  { v: "adventure", label: "Aventure" },
-  { v: "art-culture", label: "Art & Culture" },
+const SEASONS: { value: Season | "all"; label: string; emoji: string }[] = [
+  { value: "all", label: "Tout", emoji: "" },
+  { value: "printemps", label: "Printemps", emoji: "🌸" },
+  { value: "ete", label: "Été", emoji: "☀️" },
+  { value: "automne", label: "Automne", emoji: "🍂" },
+  { value: "hiver", label: "Hiver", emoji: "❄️" },
+];
+
+const SITUATIONS_SINGLE: { value: DateOccasion | "all"; label: string }[] = [
+  { value: "all", label: "Tout" },
+  { value: "1ere-date", label: "1ère date" },
+  { value: "2eme-date", label: "2ème date" },
+  { value: "3eme-date+", label: "3ème date +" },
+  { value: "casual", label: "Sortie casual" },
+];
+
+const SITUATIONS_COUPLE: { value: DateOccasion | "all"; label: string }[] = [
+  { value: "all", label: "Tout" },
+  { value: "date-night", label: "Date night" },
+  { value: "anniversaire", label: "Anniversaire" },
+  { value: "saint-valentin", label: "St-Valentin" },
+  { value: "birthday", label: "Birthday" },
+  { value: "weekend", label: "Weekend escape" },
 ];
 
 export function DatesFeed() {
   const router = useRouter();
   const [status, setStatus] = useState<Status | null>(null);
   const [partner, setPartner] = useState<Partner | null>(null);
-  const [filter, setFilter] = useState("all");
+  const [season, setSeason] = useState<Season | "all">("all");
+  const [occasion, setOccasion] = useState<DateOccasion | "all">("all");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -54,12 +78,30 @@ export function DatesFeed() {
     if (p) {
       try {
         setPartner(JSON.parse(p) as Partner);
-      } catch {
-        /* corrupted — ignore */
-      }
+      } catch {}
     }
     setReady(true);
   }, [router]);
+
+  const filteredDates = useMemo(() => {
+    return DATES.filter((d) => {
+      if (status === "single" && !d.forSingles) return false;
+      if (status === "couple" && !d.forCouples) return false;
+      if (season !== "all" && !d.seasons.includes(season) && !d.seasons.includes("all")) return false;
+      if (occasion !== "all" && !d.occasions.includes(occasion)) return false;
+      return true;
+    });
+  }, [status, season, occasion]);
+
+  const datesByCategory = useMemo(() => {
+    const map = new Map<DateCategory, DateIdea[]>();
+    for (const date of filteredDates) {
+      const list = map.get(date.category) ?? [];
+      list.push(date);
+      map.set(date.category, list);
+    }
+    return map;
+  }, [filteredDates]);
 
   if (!ready) {
     return (
@@ -69,18 +111,13 @@ export function DatesFeed() {
     );
   }
 
-  const dates = DATES.filter((d) => {
-    if (status === "single" && !d.forSingles) return false;
-    if (status === "couple" && !d.forCouples) return false;
-    if (filter !== "all" && d.category !== filter) return false;
-    return true;
-  });
-
   const displayName = partner?.nickname?.trim() || partner?.name?.trim();
+  const situations = status === "couple" ? SITUATIONS_COUPLE : SITUATIONS_SINGLE;
 
   return (
-    <main className="min-h-screen px-6 py-16">
+    <main className="min-h-screen px-6 py-16 pb-32">
       <div className="max-w-[1100px] mx-auto">
+        {/* Top nav */}
         <div className="flex items-center justify-between mb-12 flex-wrap gap-4">
           <Link
             href="/"
@@ -109,6 +146,7 @@ export function DatesFeed() {
           </div>
         </div>
 
+        {/* Hero */}
         <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-4">
           Sélection Eve
         </p>
@@ -131,12 +169,13 @@ export function DatesFeed() {
         </h1>
         <p className="text-[11px] tracking-[0.16em] text-muted mb-10 leading-[1.7] max-w-xl">
           {status === "couple"
-            ? "Sélection adaptée à vous deux. Tu peux aussi générer une date 100% personnalisée."
-            : "Des idées pour vos premières rencontres et soirées spéciales à venir."}
+            ? "Filtre par saison et type de soirée. Demande à Eve si tu veux des conseils sur mesure."
+            : "Filtre par saison et étape de votre rencontre. Demande à Eve si tu cherches une idée précise."}
         </p>
 
+        {/* Couple-only generate CTA */}
         {status === "couple" && displayName && (
-          <div className="bg-gradient-to-br from-light-gold/50 to-blush/40 border border-gold/30 rounded-[22px] p-7 sm:p-8 mb-12 flex items-center justify-between gap-6 flex-wrap">
+          <div className="bg-gradient-to-br from-light-gold/50 to-blush/40 border border-gold/30 rounded-[22px] p-7 sm:p-8 mb-10 flex items-center justify-between gap-6 flex-wrap">
             <div className="flex-1 min-w-[240px]">
               <p className="text-[10px] font-bold tracking-[0.22em] text-deep-rose mb-1.5">
                 ✨ Date sur mesure
@@ -151,44 +190,95 @@ export function DatesFeed() {
             <button
               disabled
               className="bg-rose/40 text-white px-7 py-3.5 rounded-full text-[11px] font-bold tracking-[0.22em] cursor-not-allowed shrink-0"
-              title="Bientôt disponible"
             >
               Bientôt ✨
             </button>
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2 mb-10">
-          {FILTERS.map((f) => (
-            <button
-              key={f.v}
-              onClick={() => setFilter(f.v)}
-              className={`text-[10px] font-bold tracking-[0.16em] px-4 py-2.5 rounded-full border-[1.5px] transition-all ${
-                filter === f.v
-                  ? "bg-rose text-white border-rose"
-                  : "bg-cream text-muted border-rose/15 hover:border-rose hover:text-rose"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
+        {/* Top filters: Season */}
+        <div className="mb-6">
+          <p className="text-[9px] font-bold tracking-[0.32em] text-muted mb-3">
+            Saison
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {SEASONS.map((s) => (
+              <button
+                key={s.value}
+                onClick={() => setSeason(s.value as Season | "all")}
+                className={`text-[10px] font-bold tracking-[0.16em] px-4 py-2.5 rounded-full border-[1.5px] transition-all ${
+                  season === s.value
+                    ? "bg-charcoal text-cream border-charcoal"
+                    : "bg-cream text-muted border-rose/15 hover:border-charcoal hover:text-charcoal"
+                }`}
+              >
+                {s.emoji && <span className="mr-1.5">{s.emoji}</span>}
+                {s.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {dates.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="font-script text-rose text-[40px] mb-2">vide pour l&apos;instant</p>
-            <p className="text-[10px] tracking-[0.18em] text-muted">
-              Pas de date dans cette catégorie. Essaye un autre filtre.
+        {/* Top filters: Situation */}
+        <div className="mb-10">
+          <p className="text-[9px] font-bold tracking-[0.32em] text-muted mb-3">
+            Situation
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {situations.map((s) => (
+              <button
+                key={s.value}
+                onClick={() => setOccasion(s.value as DateOccasion | "all")}
+                className={`text-[10px] font-bold tracking-[0.16em] px-4 py-2.5 rounded-full border-[1.5px] transition-all ${
+                  occasion === s.value
+                    ? "bg-rose text-white border-rose"
+                    : "bg-cream text-muted border-rose/15 hover:border-rose hover:text-rose"
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Sections by category */}
+        {filteredDates.length === 0 ? (
+          <div className="text-center py-20 bg-warm-white border border-rose/15 rounded-[24px]">
+            <p className="font-script text-rose text-[48px] mb-3">vide</p>
+            <p className="text-[10px] tracking-[0.18em] text-muted leading-[1.8] max-w-md mx-auto">
+              Aucune date pour ces filtres. Essaye une autre combinaison ou demande à Eve.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {dates.map((d) => (
-              <DateCard key={d.id} date={d} />
-            ))}
+          <div className="space-y-14">
+            {CATEGORIES.map((cat) => {
+              const dates = datesByCategory.get(cat.value);
+              if (!dates || dates.length === 0) return null;
+              return (
+                <section key={cat.value}>
+                  <div className="flex items-baseline justify-between mb-6 pb-3 border-b border-rose/15">
+                    <h2 className="font-sans text-[13px] font-extrabold tracking-[0.22em] text-charcoal">
+                      <span className="mr-2">{cat.emoji}</span>
+                      {cat.label}
+                    </h2>
+                    <span className="text-[9px] font-semibold tracking-[0.2em] text-muted">
+                      {dates.length} {dates.length > 1 ? "idées" : "idée"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {dates.map((d) => (
+                      <DateCard key={d.id} date={d} />
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
           </div>
         )}
       </div>
+
+      {/* Floating chat with Eve */}
+      <ChatWithEve status={status} partner={partner} />
     </main>
   );
 }
@@ -198,7 +288,7 @@ function DateCard({ date }: { date: DateIdea }) {
     <div className="rounded-[22px] overflow-hidden border border-rose/15 bg-cream hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(200,114,90,0.15)] transition-all">
       <div className={`${HEADER_VARIANTS[date.variant]} px-7 pt-[30px] pb-6`}>
         <div className="inline-block bg-white/20 text-white text-[9px] font-bold tracking-[0.2em] px-3 py-1 rounded-full mb-4">
-          {date.tag} · {date.city}
+          {date.city}
         </div>
         <div className="font-script text-[36px] text-white mb-3 leading-none">
           {date.title}
