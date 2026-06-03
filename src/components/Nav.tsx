@@ -95,10 +95,10 @@ export async function Nav() {
             </li>
             <li>
               <a
-                href="#waitlist"
+                href="/start"
                 className="bg-charcoal text-cream px-[22px] py-3 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-rose hover:text-white transition-colors"
               >
-                Rejoindre
+                Commencer
               </a>
             </li>
           </>

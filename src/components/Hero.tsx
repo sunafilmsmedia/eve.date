@@ -34,10 +34,10 @@ export function Hero() {
 
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <a
-            href="#waitlist"
+            href="/start"
             className="bg-rose text-white px-[38px] py-[18px] rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all"
           >
-            Rejoindre la liste
+            Commencer
           </a>
           <a
             href="#how-it-works"
