@@ -59,10 +59,10 @@ export async function Nav() {
         </li>
         <li>
           <a
-            href="#suggestions"
+            href="#partners"
             className="text-[11px] font-semibold text-muted tracking-[0.16em] hover:text-rose transition-colors"
           >
-            Suggestions
+            Partenaires
           </a>
         </li>
         {isAdmin ? (
