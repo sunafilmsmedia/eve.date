@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Script } from "./Script";
 import { EveChat } from "./EveChat";
+import { createClient } from "@/utils/supabase/client";
 import {
   DATES,
   CATEGORIES,
@@ -62,6 +63,7 @@ export function DatesFeed() {
   const [season, setSeason] = useState<Season | "all">("all");
   const [occasion, setOccasion] = useState<DateOccasion | "all">("all");
   const [ready, setReady] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const s = localStorage.getItem("eve_status") as Status | null;
@@ -81,7 +83,26 @@ export function DatesFeed() {
       } catch {}
     }
     setReady(true);
+
+    // Detect Supabase auth (Google or otherwise)
+    if (
+      process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => {
+        setUserEmail(data.user?.email ?? null);
+      });
+      const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUserEmail(session?.user?.email ?? null);
+      });
+      return () => {
+        sub.subscription.unsubscribe();
+      };
+    }
   }, [router]);
+
+  const hasAccount = userEmail !== null;
 
   const filteredDates = useMemo(() => {
     return DATES.filter((d) => {
@@ -143,11 +164,33 @@ export function DatesFeed() {
             >
               Changer →
             </Link>
+            {hasAccount && userEmail && (
+              <div className="flex items-center gap-3 pl-5 border-l border-rose/15">
+                <span className="text-[10px] tracking-[0.14em] text-muted">
+                  {userEmail.split("@")[0]}
+                </span>
+                <button
+                  onClick={async () => {
+                    if (
+                      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+                      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+                    )
+                      return;
+                    const supabase = createClient();
+                    await supabase.auth.signOut();
+                    setUserEmail(null);
+                  }}
+                  className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors cursor-pointer"
+                >
+                  Déconnexion
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Chat with Eve at the top */}
-        <EveChat status={status} partner={partner} />
+        <EveChat status={status} partner={partner} hasAccount={hasAccount} />
 
         {/* Catalogue section header */}
         <div className="flex items-center gap-4 mb-10">

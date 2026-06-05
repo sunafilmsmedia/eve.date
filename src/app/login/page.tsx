@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Script } from "@/components/Script";
+import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { login, signup } from "./actions";
 
 type SearchParams = Promise<{ error?: string; message?: string }>;
@@ -90,9 +91,24 @@ export default async function LoginPage({
               formAction={signup}
               className="w-full bg-transparent text-charcoal border-[1.5px] border-charcoal/20 py-4 rounded-full text-[11px] font-semibold tracking-[0.22em] hover:border-rose hover:text-rose transition-colors cursor-pointer"
             >
-              Créer un compte
+              Créer un compte (admin)
             </button>
           </form>
+
+          <div className="flex items-center gap-3 my-7">
+            <div className="h-px bg-rose/15 flex-1" />
+            <span className="text-[9px] tracking-[0.28em] text-muted">Ou</span>
+            <div className="h-px bg-rose/15 flex-1" />
+          </div>
+
+          <div className="flex justify-center">
+            <GoogleSignInButton
+              next="/dates"
+              label="Continuer avec Google"
+              variant="outline"
+              fullWidth
+            />
+          </div>
         </div>
 
         <p className="text-center mt-8 text-[9px] tracking-[0.2em] text-muted">

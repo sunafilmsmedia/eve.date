@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 
 const INTERESTS = [
   "Vin & Gastronomie",
@@ -107,13 +108,8 @@ export function AvatarForm() {
               </li>
             ))}
           </ul>
-          <div className="flex gap-3 flex-wrap pl-12">
-            <button
-              disabled
-              className="bg-rose/40 text-white px-6 py-3 rounded-full text-[10px] font-bold tracking-[0.22em] cursor-not-allowed"
-            >
-              Créer un compte · Bientôt
-            </button>
+          <div className="flex gap-3 flex-wrap pl-12 items-center">
+            <GoogleSignInButton next="/avatar" label="Continuer avec Google" />
             <p className="text-[9px] tracking-[0.18em] text-muted self-center">
               ou continue sans compte ci-dessous
             </p>

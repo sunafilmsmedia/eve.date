@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 
 type Status = "single" | "couple";
 type Partner = {
@@ -209,13 +210,8 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
               <p className="text-[10px] tracking-[0.14em] text-muted leading-[1.8] mb-6 max-w-md mx-auto">
                 Crée un compte gratuit pour continuer à discuter, garder ton historique et synchroniser entre tes appareils.
               </p>
-              <div className="flex gap-3 justify-center flex-wrap">
-                <button
-                  disabled
-                  className="bg-rose/40 text-white px-7 py-3 rounded-full text-[10px] font-bold tracking-[0.22em] cursor-not-allowed"
-                >
-                  Créer un compte · Bientôt
-                </button>
+              <div className="flex gap-3 justify-center flex-wrap items-center">
+                <GoogleSignInButton next="/dates" label="Continuer avec Google" />
                 <button
                   onClick={() => {
                     if (typeof window !== "undefined") {
