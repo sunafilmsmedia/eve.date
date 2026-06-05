@@ -19,6 +19,7 @@ type Message = {
 type EveChatProps = {
   status: Status | null;
   partner: Partner | null;
+  hasAccount?: boolean;
 };
 
 const SUGGESTIONS_SINGLE = [
@@ -35,15 +36,30 @@ const SUGGESTIONS_COUPLE = [
   "Une date originale sous $100",
 ];
 
-export function EveChat({ status, partner }: EveChatProps) {
+const MAX_FREE_MESSAGES = 7;
+const COUNT_STORAGE_KEY = "eve_chat_user_messages";
+
+export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
+  const [usedMessages, setUsedMessages] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const suggestions =
     status === "couple" ? SUGGESTIONS_COUPLE : SUGGESTIONS_SINGLE;
+
+  // Load message count from localStorage on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = localStorage.getItem(COUNT_STORAGE_KEY);
+    const n = raw ? parseInt(raw, 10) : 0;
+    setUsedMessages(Number.isFinite(n) && n > 0 ? n : 0);
+  }, []);
+
+  const remaining = Math.max(0, MAX_FREE_MESSAGES - usedMessages);
+  const limitReached = !hasAccount && usedMessages >= MAX_FREE_MESSAGES;
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -64,12 +80,22 @@ export function EveChat({ status, partner }: EveChatProps) {
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || streaming) return;
+    if (limitReached) return;
 
     const userMsg: Message = { role: "user", content: text.trim() };
     const nextMessages = [...messages, userMsg];
     setMessages(nextMessages);
     setInput("");
     setStreaming(true);
+
+    // Track usage (skip for accounts)
+    if (!hasAccount) {
+      const next = usedMessages + 1;
+      setUsedMessages(next);
+      if (typeof window !== "undefined") {
+        localStorage.setItem(COUNT_STORAGE_KEY, String(next));
+      }
+    }
 
     setMessages([...nextMessages, { role: "assistant", content: "" }]);
 
@@ -171,39 +197,84 @@ export function EveChat({ status, partner }: EveChatProps) {
             </div>
           )}
 
-          {/* Input */}
-          <div className="border-t border-rose/10 bg-cream p-4">
-            <form onSubmit={handleSubmit}>
-              <div className="flex items-end gap-3">
-                <textarea
-                  ref={textareaRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Demande à Eve..."
-                  disabled={streaming}
-                  rows={1}
-                  className="flex-1 resize-none px-5 py-3.5 border border-rose/20 rounded-2xl text-[13px] tracking-[0.02em] text-charcoal bg-warm-white outline-none focus:border-rose transition-colors placeholder:text-muted/50 normal-case disabled:opacity-50 overflow-y-auto"
-                  style={{ minHeight: "48px", maxHeight: "160px" }}
-                />
+          {/* Input or limit CTA */}
+          {limitReached ? (
+            <div className="border-t border-rose/10 bg-gradient-to-br from-light-gold/40 to-blush/30 px-7 py-9 text-center">
+              <p className="font-script text-[44px] text-rose leading-none mb-3">
+                À toi maintenant
+              </p>
+              <p className="text-[10px] tracking-[0.18em] text-charcoal mb-2">
+                Tu as utilisé tes {MAX_FREE_MESSAGES} conversations gratuites avec Eve.
+              </p>
+              <p className="text-[10px] tracking-[0.14em] text-muted leading-[1.8] mb-6 max-w-md mx-auto">
+                Crée un compte gratuit pour continuer à discuter, garder ton historique et synchroniser entre tes appareils.
+              </p>
+              <div className="flex gap-3 justify-center flex-wrap">
                 <button
-                  type="submit"
-                  disabled={!input.trim() || streaming}
-                  className="w-12 h-12 flex items-center justify-center bg-rose text-white rounded-2xl hover:bg-deep-rose disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer shrink-0"
-                  aria-label="Envoyer"
+                  disabled
+                  className="bg-rose/40 text-white px-7 py-3 rounded-full text-[10px] font-bold tracking-[0.22em] cursor-not-allowed"
                 >
-                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-                    <path
-                      d="M14 2L2 8L7 9.5L9.5 14L14 2Z"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  Créer un compte · Bientôt
+                </button>
+                <button
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      localStorage.removeItem(COUNT_STORAGE_KEY);
+                    }
+                    setUsedMessages(0);
+                    setMessages([]);
+                  }}
+                  className="text-[10px] font-bold tracking-[0.22em] text-muted hover:text-rose transition-colors cursor-pointer px-4"
+                >
+                  ↺ Réinitialiser (dev)
                 </button>
               </div>
-            </form>
-          </div>
+            </div>
+          ) : (
+            <div className="border-t border-rose/10 bg-cream p-4">
+              <form onSubmit={handleSubmit}>
+                <div className="flex items-end gap-3">
+                  <textarea
+                    ref={textareaRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Demande à Eve..."
+                    disabled={streaming}
+                    rows={1}
+                    className="flex-1 resize-none px-5 py-3.5 border border-rose/20 rounded-2xl text-[13px] tracking-[0.02em] text-charcoal bg-warm-white outline-none focus:border-rose transition-colors placeholder:text-muted/50 normal-case disabled:opacity-50 overflow-y-auto"
+                    style={{ minHeight: "48px", maxHeight: "160px" }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!input.trim() || streaming}
+                    className="w-12 h-12 flex items-center justify-center bg-rose text-white rounded-2xl hover:bg-deep-rose disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer shrink-0"
+                    aria-label="Envoyer"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+                      <path
+                        d="M14 2L2 8L7 9.5L9.5 14L14 2Z"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                {!hasAccount && usedMessages > 0 && (
+                  <p
+                    className={`text-[9px] tracking-[0.22em] mt-3 text-center ${
+                      remaining <= 2 ? "text-rose font-bold" : "text-muted"
+                    }`}
+                  >
+                    {remaining > 0
+                      ? `${remaining} message${remaining > 1 ? "s" : ""} gratuit${remaining > 1 ? "s" : ""} restant${remaining > 1 ? "s" : ""}`
+                      : ""}
+                  </p>
+                )}
+              </form>
+            </div>
+          )}
 
           {/* Suggestions in empty state */}
           {isEmpty && (
@@ -227,9 +298,9 @@ export function EveChat({ status, partner }: EveChatProps) {
         </div>
 
         {/* No-account hint */}
-        {isEmpty && (
+        {isEmpty && !hasAccount && (
           <p className="text-center text-[9px] tracking-[0.22em] text-muted mt-5 leading-[1.7]">
-            Aucun compte requis · Les conversations ne sont pas sauvegardées sans compte
+            {MAX_FREE_MESSAGES} conversations gratuites · Aucun compte requis pour commencer
           </p>
         )}
       </div>
