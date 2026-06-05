@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Script } from "./Script";
-import { ChatWithEve } from "./ChatWithEve";
+import { EveChat } from "./EveChat";
 import {
   DATES,
   CATEGORIES,
@@ -115,7 +115,7 @@ export function DatesFeed() {
   const situations = status === "couple" ? SITUATIONS_COUPLE : SITUATIONS_SINGLE;
 
   return (
-    <main className="min-h-screen px-6 py-16 pb-32">
+    <main className="min-h-screen px-6 py-16">
       <div className="max-w-[1100px] mx-auto">
         {/* Top nav */}
         <div className="flex items-center justify-between mb-12 flex-wrap gap-4">
@@ -146,11 +146,19 @@ export function DatesFeed() {
           </div>
         </div>
 
-        {/* Hero */}
-        <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-4">
-          Sélection Eve
-        </p>
-        <h1 className="font-sans text-[28px] sm:text-[40px] font-extrabold tracking-[0.02em] text-charcoal mb-3 leading-[1.15]">
+        {/* Chat with Eve at the top */}
+        <EveChat status={status} partner={partner} />
+
+        {/* Catalogue section header */}
+        <div className="flex items-center gap-4 mb-10">
+          <div className="h-px bg-rose/15 flex-1" />
+          <p className="text-[10px] font-bold tracking-[0.32em] text-rose whitespace-nowrap">
+            Ou explore le catalogue
+          </p>
+          <div className="h-px bg-rose/15 flex-1" />
+        </div>
+
+        <h1 className="font-sans text-[28px] sm:text-[40px] font-extrabold tracking-[0.02em] text-charcoal mb-3 leading-[1.15] text-center">
           {status === "couple" && displayName ? (
             <>
               Pour{" "}
@@ -160,17 +168,18 @@ export function DatesFeed() {
             </>
           ) : (
             <>
-              Découvre des{" "}
+              Des{" "}
               <Script className="text-rose text-[56px] sm:text-[80px] inline-block leading-[0.85]">
                 moments
-              </Script>
+              </Script>{" "}
+              à découvrir
             </>
           )}
         </h1>
-        <p className="text-[11px] tracking-[0.16em] text-muted mb-10 leading-[1.7] max-w-xl">
+        <p className="text-[11px] tracking-[0.16em] text-muted mb-10 leading-[1.7] max-w-xl mx-auto text-center">
           {status === "couple"
-            ? "Filtre par saison et type de soirée. Demande à Eve si tu veux des conseils sur mesure."
-            : "Filtre par saison et étape de votre rencontre. Demande à Eve si tu cherches une idée précise."}
+            ? "Filtre par saison et type de soirée."
+            : "Filtre par saison et étape de votre rencontre."}
         </p>
 
         {/* Couple-only generate CTA */}
@@ -276,9 +285,6 @@ export function DatesFeed() {
           </div>
         )}
       </div>
-
-      {/* Floating chat with Eve */}
-      <ChatWithEve status={status} partner={partner} />
     </main>
   );
 }

@@ -73,9 +73,52 @@ export function AvatarForm() {
         <p className="font-script text-[52px] sm:text-[72px] text-rose mb-4 leading-[0.9]">
           ta moitié
         </p>
-        <p className="text-[11px] tracking-[0.16em] text-muted mb-10 leading-[1.8] max-w-lg">
+        <p className="text-[11px] tracking-[0.16em] text-muted mb-8 leading-[1.8] max-w-lg">
           Pour qu&apos;Eve te crée des dates vraiment personnalisées, j&apos;ai besoin de mieux la·le connaître.
         </p>
+
+        {/* Account benefits banner */}
+        <div className="bg-gradient-to-br from-light-gold/40 to-blush/30 border border-gold/30 rounded-[20px] p-7 mb-10">
+          <div className="flex items-start gap-4 mb-5">
+            <span className="text-[28px] leading-none mt-1">✨</span>
+            <div>
+              <p className="text-[10px] font-bold tracking-[0.28em] text-deep-rose mb-2">
+                Crée un compte pour sauvegarder ton avatar
+              </p>
+              <p className="text-[10px] tracking-[0.14em] text-muted leading-[1.8]">
+                Sans compte, ton avatar reste uniquement sur cet appareil. Crée un compte gratuit pour profiter de :
+              </p>
+            </div>
+          </div>
+          <ul className="list-none space-y-2 mb-6 pl-12">
+            {[
+              "Avatar sauvegardé et accessible partout",
+              "Historique de tes conversations avec Eve",
+              "Synchronisation entre tes appareils",
+              "Préférences personnalisées (langue, ville…)",
+              "Accès aux abonnements Pomme et fonctionnalités à venir",
+            ].map((benefit) => (
+              <li
+                key={benefit}
+                className="flex items-start gap-2.5 text-[10px] tracking-[0.12em] text-charcoal/80 leading-[1.7]"
+              >
+                <span className="text-rose font-bold flex-shrink-0 mt-0.5">○</span>
+                {benefit}
+              </li>
+            ))}
+          </ul>
+          <div className="flex gap-3 flex-wrap pl-12">
+            <button
+              disabled
+              className="bg-rose/40 text-white px-6 py-3 rounded-full text-[10px] font-bold tracking-[0.22em] cursor-not-allowed"
+            >
+              Créer un compte · Bientôt
+            </button>
+            <p className="text-[9px] tracking-[0.18em] text-muted self-center">
+              ou continue sans compte ci-dessous
+            </p>
+          </div>
+        </div>
 
         <form
           onSubmit={handleSubmit}
