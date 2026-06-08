@@ -1,28 +1,21 @@
 import { createClient } from "@/utils/supabase/server";
 
-async function getAuthState() {
+async function getUser() {
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
     !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {
-    return { user: null, isAdmin: false };
+    return null;
   }
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const adminEmails = (process.env.ADMIN_EMAILS ?? "")
-    .split(",")
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
-  const isAdmin = Boolean(
-    user?.email && adminEmails.includes(user.email.toLowerCase())
-  );
-  return { user, isAdmin };
+  return user;
 }
 
 export async function Nav() {
-  const { user, isAdmin } = await getAuthState();
+  const user = await getUser();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-12 py-[18px] bg-cream/85 backdrop-blur-md border-b border-rose/10">
@@ -65,22 +58,13 @@ export async function Nav() {
             Partenaires
           </a>
         </li>
-        {isAdmin ? (
+        {user ? (
           <li>
             <a
-              href="/dashboard"
+              href="/dates"
               className="bg-charcoal text-cream px-[22px] py-3 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-rose hover:text-white transition-colors"
             >
-              Dashboard
-            </a>
-          </li>
-        ) : user ? (
-          <li>
-            <a
-              href="/dashboard"
-              className="bg-charcoal text-cream px-[22px] py-3 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-rose hover:text-white transition-colors"
-            >
-              Mon compte
+              Continuer
             </a>
           </li>
         ) : (
