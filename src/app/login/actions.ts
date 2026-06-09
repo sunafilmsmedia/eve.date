@@ -8,12 +8,17 @@ import { createClient } from "@/utils/supabase/server";
 const OAUTH_NEXT_COOKIE = "eve_oauth_next";
 
 async function getBaseUrl(): Promise<string> {
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host");
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  if (host) return `${proto}://${host}`;
-  return "http://localhost:3000";
+  let url: string;
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    url = process.env.NEXT_PUBLIC_SITE_URL;
+  } else {
+    const h = await headers();
+    const host = h.get("x-forwarded-host") ?? h.get("host");
+    const proto = h.get("x-forwarded-proto") ?? "http";
+    url = host ? `${proto}://${host}` : "http://localhost:3000";
+  }
+  // Strip trailing slashes to avoid `https://x.com//auth/callback` double-slash
+  return url.replace(/\/+$/, "");
 }
 
 export async function signInWithGoogle(formData: FormData) {

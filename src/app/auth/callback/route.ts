@@ -26,6 +26,6 @@ export async function GET(request: Request) {
     );
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? origin;
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? origin).replace(/\/+$/, "");
   return NextResponse.redirect(`${baseUrl}${next}`);
 }
