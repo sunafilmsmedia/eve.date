@@ -2,8 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+
+const OAUTH_NEXT_COOKIE = "eve_oauth_next";
 
 async function getBaseUrl(): Promise<string> {
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
@@ -19,10 +21,21 @@ export async function signInWithGoogle(formData: FormData) {
   const supabase = await createClient();
   const baseUrl = await getBaseUrl();
 
+  // Stash next in a cookie so the redirect_to URL stays clean (no query
+  // params) — Supabase's Redirect URL matching is finicky about query strings.
+  const cookieStore = await cookies();
+  cookieStore.set(OAUTH_NEXT_COOKIE, next, {
+    maxAge: 60 * 10,
+    httpOnly: true,
+    sameSite: "lax",
+    secure: baseUrl.startsWith("https://"),
+    path: "/",
+  });
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${baseUrl}/auth/callback?next=${encodeURIComponent(next)}`,
+      redirectTo: `${baseUrl}/auth/callback`,
     },
   });
 
