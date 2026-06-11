@@ -3,11 +3,17 @@ import { DATES } from "@/lib/dates";
 
 const client = new Anthropic();
 
-const SYSTEM_PROMPT = `Tu es Eve AI, un agent spécialisé uniquement dans la création, la planification et l'amélioration de dates romantiques, de moments de couple, de surprises attentionnées et de moments intimes respectueux avec un·e partenaire.
+const SYSTEM_PROMPT = `Tu es Eve AI, un agent spécialisé dans la création et la planification de sorties pertinentes selon 4 contextes précis :
+- Couple (dates romantiques, surprises, anniversaires)
+- Casual dating (premiers dates, début de fréquentation)
+- Double dates (sorties à 4)
+- Sorties entre amis (groupes)
 
-Ton rôle n'est PAS d'être un assistant généraliste. Tu ne réponds pas aux demandes qui sortent du cadre des dates, du romantisme, du couple, de la connexion émotionnelle ou de la planification d'expériences amoureuses.
+Le contexte exact (TYPE DE SORTIE) est précisé dans le bloc système qui suit. **Tu DOIS adapter ton ton, ton niveau d'intimité, ton angle romantique et tes recommandations selon ce type.**
 
-Ton objectif est simple : aider l'utilisateur à créer des moments mémorables, romantiques, intentionnels et adaptés à son ou sa partenaire.
+Ton rôle n'est PAS d'être un assistant généraliste. Tu ne réponds pas aux demandes qui sortent du cadre des sorties planifiées (sorties romantiques, casual dating, doubles dates, sorties entre amis).
+
+Ton objectif est simple : aider l'utilisateur à créer des moments mémorables, intentionnels et adaptés au type de relation et de personnes concernées.
 
 ================================================================
 1. IDENTITÉ
@@ -331,37 +337,121 @@ ${JSON.stringify(
   2
 )}`;
 
+type OutingType = "couple" | "casual_dating" | "double_date" | "friends";
+
 type UserContext = {
-  status?: "single" | "couple";
-  partner?: {
-    name?: string;
-    nickname?: string;
-    interests?: string[];
-    vibe?: string;
-    budget?: number;
-  };
+  outingType?: OutingType;
+  profile?: Record<string, unknown>;
 };
 
 function buildUserContextBlock(ctx: UserContext): string {
-  if (ctx.status === "couple" && ctx.partner) {
-    const p = ctx.partner;
+  const profile = ctx.profile ?? {};
+  const t = ctx.outingType;
+  const p = (k: string) => profile[k];
+
+  if (t === "couple") {
     return [
-      `Contexte utilisateur : en couple.`,
-      p.name
-        ? `Partenaire : ${p.name}${p.nickname ? ` (surnom : ${p.nickname})` : ""}.`
+      `TYPE DE SORTIE : Couple.`,
+      `Ton à utiliser : romantique, intentionnel, attentionné.`,
+      p("name")
+        ? `Partenaire : ${p("name")}${p("nickname") ? ` (surnom : ${p("nickname")})` : ""}.`
         : "",
-      p.interests?.length ? `Passions : ${p.interests.join(", ")}.` : "",
-      p.vibe ? `Tempérament : ${p.vibe}.` : "",
-      p.budget ? `Budget moyen par sortie : ~$${p.budget}.` : "",
-      `Personnalise tes recommandations en fonction de ces préférences.`,
+      p("interests") && (p("interests") as string[]).length
+        ? `Passions : ${(p("interests") as string[]).join(", ")}.`
+        : "",
+      p("temperament") ? `Tempérament : ${p("temperament")}.` : "",
+      p("relationshipStage") ? `Stade de la relation : ${p("relationshipStage")}.` : "",
+      p("occasion") ? `Occasion : ${p("occasion")}.` : "",
+      p("vibe") ? `Ambiance recherchée : ${p("vibe")}.` : "",
+      p("likes") && (p("likes") as string[]).length
+        ? `Aime : ${(p("likes") as string[]).join(", ")}.`
+        : "",
+      p("dislikes") && (p("dislikes") as string[]).length
+        ? `Évite : ${(p("dislikes") as string[]).join(", ")}.`
+        : "",
+      p("budget") ? `Budget moyen par sortie : ~$${p("budget")}.` : "",
+      `Personnalise tes recommandations en fonction du couple. Privilégie l'intimité et la connexion émotionnelle.`,
     ]
       .filter(Boolean)
       .join(" ");
   }
-  if (ctx.status === "single") {
-    return "Contexte utilisateur : célibataire, en phase de rencontre ou premières dates. Adapte tes recommandations à cette situation (premières dates, sortie casual, briser la glace).";
+
+  if (t === "casual_dating") {
+    return [
+      `TYPE DE SORTIE : Casual dating (rencontre récente, pas encore en couple officiel).`,
+      `Ton à utiliser : léger, attentionné, sans pression. ÉVITE les ambiances trop romantiques ou intimes.`,
+      p("conversationDuration") ? `Connaissance : ${p("conversationDuration")}.` : "",
+      typeof p("datesCompleted") === "number"
+        ? `Nombre de dates déjà faits : ${p("datesCompleted")}.`
+        : "",
+      p("comfortLevel") ? `Niveau de confort : ${p("comfortLevel")}.` : "",
+      p("goal") ? `Objectif : ${p("goal")}.` : "",
+      p("knownInterests") && (p("knownInterests") as string[]).length
+        ? `Intérêts connus : ${(p("knownInterests") as string[]).join(", ")}.`
+        : "",
+      p("avoidActivities") && (p("avoidActivities") as string[]).length
+        ? `Éviter : ${(p("avoidActivities") as string[]).join(", ")}.`
+        : "",
+      p("budget") ? `Budget : ~$${p("budget")} par sortie.` : "",
+      `Recommande des sorties publiques, faciles à quitter, qui permettent la conversation. Évite les contextes intimes (pas de spa en duo, pas de chalet privé, pas de soirées tardives à la maison).`,
+    ]
+      .filter(Boolean)
+      .join(" ");
   }
-  return "Contexte utilisateur : inconnu. Pose une question pour comprendre la situation avant de recommander.";
+
+  if (t === "double_date") {
+    return [
+      `TYPE DE SORTIE : Double date (sortie à 4 personnes).`,
+      `Ton à utiliser : convivial, social, axé sur le groupe.`,
+      typeof p("numberOfPeople") === "number"
+        ? `Nombre de personnes : ${p("numberOfPeople")}.`
+        : "",
+      p("relationshipTypes") ? `Relation entre les personnes : ${p("relationshipTypes")}.` : "",
+      p("budgetPerPerson") ? `Budget par personne : ~$${p("budgetPerPerson")}.` : "",
+      p("city") ? `Ville : ${p("city")}.` : "",
+      p("maxDistance") ? `Distance max : ${p("maxDistance")} km.` : "",
+      p("vibe") ? `Ambiance : ${p("vibe")}.` : "",
+      p("energyLevel") ? `Niveau d'énergie : ${p("energyLevel")}.` : "",
+      p("preferredActivities") && (p("preferredActivities") as string[]).length
+        ? `Activités préférées : ${(p("preferredActivities") as string[]).join(", ")}.`
+        : "",
+      p("avoidActivities") && (p("avoidActivities") as string[]).length
+        ? `Éviter : ${(p("avoidActivities") as string[]).join(", ")}.`
+        : "",
+      `Recommande des activités qui favorisent la conversation, le rire et la détente. Évite les choses où une personne pourrait se sentir mise à l'écart ou en compétition.`,
+    ]
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  if (t === "friends") {
+    return [
+      `TYPE DE SORTIE : Sortie entre amis (groupe d'amis, pas romantique).`,
+      `Ton à utiliser : amical, fun, énergique. AUCUN angle romantique.`,
+      typeof p("numberOfPeople") === "number"
+        ? `Nombre de personnes : ${p("numberOfPeople")}.`
+        : "",
+      p("occasion") ? `Occasion : ${p("occasion")}.` : "",
+      p("budgetPerPerson") ? `Budget par personne : ~$${p("budgetPerPerson")}.` : "",
+      p("city") ? `Ville : ${p("city")}.` : "",
+      p("maxDistance") ? `Distance max : ${p("maxDistance")} km.` : "",
+      p("time") ? `Moment : ${p("time")}.` : "",
+      p("vibe") ? `Ambiance : ${p("vibe")}.` : "",
+      p("energyLevel") ? `Niveau d'énergie : ${p("energyLevel")}.` : "",
+      p("indoorOrOutdoor") ? `Cadre : ${p("indoorOrOutdoor")}.` : "",
+      p("preferredActivities") && (p("preferredActivities") as string[]).length
+        ? `Activités préférées : ${(p("preferredActivities") as string[]).join(", ")}.`
+        : "",
+      p("avoidActivities") && (p("avoidActivities") as string[]).length
+        ? `Éviter : ${(p("avoidActivities") as string[]).join(", ")}.`
+        : "",
+      `Recommande des activités de groupe adaptées au budget commun, à la taille du groupe et à l'énergie. ZÉRO contexte romantique.`,
+    ]
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  return "Contexte utilisateur : inconnu. Pose une question pour comprendre le type de sortie (couple, casual dating, double date, ou entre amis) avant de recommander.";
 }
 
 export async function POST(req: Request) {

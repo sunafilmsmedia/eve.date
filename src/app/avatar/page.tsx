@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { AvatarForm } from "@/components/AvatarForm";
+import { SetupDispatcher } from "@/components/setup/SetupDispatcher";
 
 export const metadata: Metadata = {
-  title: "Créer l'avatar · Eve AI",
+  title: "Configurer ta sortie · Eve AI",
 };
 
 export default function AvatarPage() {
-  return <AvatarForm />;
+  return <SetupDispatcher />;
 }

@@ -15,15 +15,13 @@ import {
   type Season,
   type DateCategory,
 } from "@/lib/dates";
-
-type Status = "single" | "couple";
-type Partner = {
-  name?: string;
-  nickname?: string;
-  interests?: string[];
-  vibe?: string;
-  budget?: number;
-};
+import {
+  loadOutingType,
+  loadProfile,
+  getDisplayName,
+  type OutingType,
+  type Profile,
+} from "@/lib/profile";
 
 const HEADER_VARIANTS = {
   rose: "bg-gradient-to-br from-rose to-deep-rose",
@@ -39,80 +37,137 @@ const SEASONS: { value: Season | "all"; label: string; emoji: string }[] = [
   { value: "hiver", label: "Hiver", emoji: "❄️" },
 ];
 
-const SITUATIONS_SINGLE: { value: DateOccasion | "all"; label: string }[] = [
-  { value: "all", label: "Tout" },
-  { value: "1ere-date", label: "1ère date" },
-  { value: "2eme-date", label: "2ème date" },
-  { value: "3eme-date+", label: "3ème date +" },
-  { value: "casual", label: "Sortie casual" },
-];
+const SITUATIONS_PER_TYPE: Record<
+  OutingType,
+  { value: DateOccasion | "all"; label: string }[]
+> = {
+  couple: [
+    { value: "all", label: "Tout" },
+    { value: "date-night", label: "Date night" },
+    { value: "anniversaire", label: "Anniversaire" },
+    { value: "saint-valentin", label: "St-Valentin" },
+    { value: "birthday", label: "Birthday" },
+    { value: "weekend", label: "Weekend escape" },
+  ],
+  casual_dating: [
+    { value: "all", label: "Tout" },
+    { value: "1ere-date", label: "1ère date" },
+    { value: "2eme-date", label: "2ème date" },
+    { value: "3eme-date+", label: "3ème date +" },
+    { value: "casual", label: "Sortie casual" },
+  ],
+  double_date: [
+    { value: "all", label: "Tout" },
+    { value: "date-night", label: "Sortie à 4" },
+    { value: "weekend", label: "Weekend" },
+    { value: "casual", label: "Casual" },
+  ],
+  friends: [
+    { value: "all", label: "Tout" },
+    { value: "casual", label: "Casual" },
+    { value: "weekend", label: "Weekend" },
+    { value: "birthday", label: "Anniversaire" },
+  ],
+};
 
-const SITUATIONS_COUPLE: { value: DateOccasion | "all"; label: string }[] = [
-  { value: "all", label: "Tout" },
-  { value: "date-night", label: "Date night" },
-  { value: "anniversaire", label: "Anniversaire" },
-  { value: "saint-valentin", label: "St-Valentin" },
-  { value: "birthday", label: "Birthday" },
-  { value: "weekend", label: "Weekend escape" },
-];
+const HERO_COPY: Record<
+  OutingType,
+  { label: string; scriptWord: string; desc: string }
+> = {
+  couple: {
+    label: "Sélection couple",
+    scriptWord: "moments",
+    desc: "Filtre par saison et type de soirée. Demande à Eve si tu cherches une idée précise.",
+  },
+  casual_dating: {
+    label: "Casual dating",
+    scriptWord: "moments",
+    desc: "Filtre par saison et étape de votre rencontre. Eve évite les ambiances trop intimes au début.",
+  },
+  double_date: {
+    label: "Double date",
+    scriptWord: "moments",
+    desc: "Sorties à quatre qui évitent les malaises. Demande à Eve pour des suggestions sur mesure.",
+  },
+  friends: {
+    label: "Sortie entre amis",
+    scriptWord: "moments",
+    desc: "Idées de groupe filtrées par saison et énergie. Demande à Eve pour une activité précise.",
+  },
+};
 
 export function DatesFeed() {
   const router = useRouter();
-  const [status, setStatus] = useState<Status | null>(null);
-  const [partner, setPartner] = useState<Partner | null>(null);
+  const [outingType, setOutingType] = useState<OutingType | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [season, setSeason] = useState<Season | "all">("all");
   const [occasion, setOccasion] = useState<DateOccasion | "all">("all");
   const [ready, setReady] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    const s = localStorage.getItem("eve_status") as Status | null;
-    if (!s) {
-      router.push("/start");
-      return;
-    }
-    const p = localStorage.getItem("eve_partner");
-    if (s === "couple" && !p) {
-      router.push("/avatar");
-      return;
-    }
-    setStatus(s);
-    if (p) {
-      try {
-        setPartner(JSON.parse(p) as Partner);
-      } catch {}
-    }
-    setReady(true);
-
-    // Detect Supabase auth (Google or otherwise)
+    // Auth gate — account is now mandatory
     if (
-      process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     ) {
-      const supabase = createClient();
-      supabase.auth.getUser().then(({ data }) => {
-        setUserEmail(data.user?.email ?? null);
-      });
-      const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-        setUserEmail(session?.user?.email ?? null);
-      });
-      return () => {
-        sub.subscription.unsubscribe();
-      };
+      // No Supabase configured — local dev fallback, allow through
+      const t = loadOutingType();
+      if (!t) {
+        router.push("/start");
+        return;
+      }
+      setOutingType(t);
+      setProfile(loadProfile());
+      setReady(true);
+      return;
     }
+
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) {
+        router.replace("/login?next=/dates");
+        return;
+      }
+      setUserEmail(data.user.email ?? null);
+
+      const t = loadOutingType();
+      if (!t) {
+        router.push("/start");
+        return;
+      }
+      const p = loadProfile();
+      if (!p) {
+        router.push("/avatar");
+        return;
+      }
+      setOutingType(t);
+      setProfile(p);
+      setReady(true);
+    });
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserEmail(session?.user?.email ?? null);
+    });
+    return () => {
+      sub.subscription.unsubscribe();
+    };
   }, [router]);
 
   const hasAccount = userEmail !== null;
 
   const filteredDates = useMemo(() => {
+    if (!outingType) return [];
     return DATES.filter((d) => {
-      if (status === "single" && !d.forSingles) return false;
-      if (status === "couple" && !d.forCouples) return false;
-      if (season !== "all" && !d.seasons.includes(season) && !d.seasons.includes("all")) return false;
+      // Couple: show forCouples. Casual: show forSingles. Double/Friends: show all.
+      if (outingType === "couple" && !d.forCouples) return false;
+      if (outingType === "casual_dating" && !d.forSingles) return false;
+      if (season !== "all" && !d.seasons.includes(season) && !d.seasons.includes("all"))
+        return false;
       if (occasion !== "all" && !d.occasions.includes(occasion)) return false;
       return true;
     });
-  }, [status, season, occasion]);
+  }, [outingType, season, occasion]);
 
   const datesByCategory = useMemo(() => {
     const map = new Map<DateCategory, DateIdea[]>();
@@ -124,7 +179,7 @@ export function DatesFeed() {
     return map;
   }, [filteredDates]);
 
-  if (!ready) {
+  if (!ready || !outingType) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <p className="font-script text-rose text-[28px]">un instant</p>
@@ -132,8 +187,9 @@ export function DatesFeed() {
     );
   }
 
-  const displayName = partner?.nickname?.trim() || partner?.name?.trim();
-  const situations = status === "couple" ? SITUATIONS_COUPLE : SITUATIONS_SINGLE;
+  const displayName = getDisplayName(profile);
+  const situations = SITUATIONS_PER_TYPE[outingType];
+  const hero = HERO_COPY[outingType];
 
   return (
     <main className="min-h-screen px-6 py-16">
@@ -149,20 +205,18 @@ export function DatesFeed() {
               AI
             </span>
           </Link>
-          <div className="flex items-center gap-5">
-            {status === "couple" && (
-              <Link
-                href="/avatar"
-                className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors"
-              >
-                Modifier l&apos;avatar
-              </Link>
-            )}
+          <div className="flex items-center gap-5 flex-wrap">
+            <Link
+              href="/avatar"
+              className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors"
+            >
+              Modifier le profil
+            </Link>
             <Link
               href="/start"
               className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors"
             >
-              Changer →
+              Changer de type →
             </Link>
             {hasAccount && userEmail && (
               <div className="flex items-center gap-3 pl-5 border-l border-rose/15">
@@ -178,7 +232,7 @@ export function DatesFeed() {
                       return;
                     const supabase = createClient();
                     await supabase.auth.signOut();
-                    setUserEmail(null);
+                    router.push("/");
                   }}
                   className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors cursor-pointer"
                 >
@@ -190,7 +244,7 @@ export function DatesFeed() {
         </div>
 
         {/* Chat with Eve at the top */}
-        <EveChat status={status} partner={partner} hasAccount={hasAccount} />
+        <EveChat outingType={outingType} profile={profile} hasAccount={hasAccount} />
 
         {/* Catalogue section header */}
         <div className="flex items-center gap-4 mb-10">
@@ -201,8 +255,11 @@ export function DatesFeed() {
           <div className="h-px bg-rose/15 flex-1" />
         </div>
 
+        <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-4 text-center">
+          {hero.label}
+        </p>
         <h1 className="font-sans text-[28px] sm:text-[40px] font-extrabold tracking-[0.02em] text-charcoal mb-3 leading-[1.15] text-center">
-          {status === "couple" && displayName ? (
+          {outingType === "couple" && displayName ? (
             <>
               Pour{" "}
               <Script className="text-rose text-[56px] sm:text-[80px] inline-block leading-[0.85]">
@@ -213,20 +270,18 @@ export function DatesFeed() {
             <>
               Des{" "}
               <Script className="text-rose text-[56px] sm:text-[80px] inline-block leading-[0.85]">
-                moments
+                {hero.scriptWord}
               </Script>{" "}
               à découvrir
             </>
           )}
         </h1>
         <p className="text-[11px] tracking-[0.16em] text-muted mb-10 leading-[1.7] max-w-xl mx-auto text-center">
-          {status === "couple"
-            ? "Filtre par saison et type de soirée."
-            : "Filtre par saison et étape de votre rencontre."}
+          {hero.desc}
         </p>
 
         {/* Couple-only generate CTA */}
-        {status === "couple" && displayName && (
+        {outingType === "couple" && displayName && (
           <div className="bg-gradient-to-br from-light-gold/50 to-blush/40 border border-gold/30 rounded-[22px] p-7 sm:p-8 mb-10 flex items-center justify-between gap-6 flex-wrap">
             <div className="flex-1 min-w-[240px]">
               <p className="text-[10px] font-bold tracking-[0.22em] text-deep-rose mb-1.5">
@@ -236,7 +291,7 @@ export function DatesFeed() {
                 Génère une date pour {displayName}
               </p>
               <p className="text-[10px] tracking-[0.14em] text-muted leading-[1.7]">
-                Eve crée une date 100% unique basée sur son avatar.
+                Eve crée une date 100% unique basée sur son profil.
               </p>
             </div>
             <button
@@ -250,9 +305,7 @@ export function DatesFeed() {
 
         {/* Top filters: Season */}
         <div className="mb-6">
-          <p className="text-[9px] font-bold tracking-[0.32em] text-muted mb-3">
-            Saison
-          </p>
+          <p className="text-[9px] font-bold tracking-[0.32em] text-muted mb-3">Saison</p>
           <div className="flex flex-wrap gap-2">
             {SEASONS.map((s) => (
               <button

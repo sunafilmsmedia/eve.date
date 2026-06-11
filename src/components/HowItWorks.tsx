@@ -2,28 +2,28 @@ import { SectionHeader, Script } from "./SectionHeader";
 
 const STEPS = [
   {
-    icon: "✨",
+    icon: "🎯",
     number: "Étape un",
-    title: "Eve te propose",
-    desc: "Choisis ta catégorie et Eve génère une date complète adaptée à l'occasion.",
+    title: "Choisis ton type de sortie",
+    desc: "Couple, casual dating, double date ou amis.",
   },
   {
-    icon: "🗓️",
+    icon: "💬",
     number: "Étape deux",
-    title: "Tu vis la date",
-    desc: "En version Pro, accède aux adresses exactes, budgets et réserve directement.",
+    title: "Réponds à quelques questions",
+    desc: "Eve comprend le contexte, les goûts, le budget et l'ambiance recherchée.",
   },
   {
-    icon: "⭐",
+    icon: "✨",
     number: "Étape trois",
-    title: "Tu notes",
-    desc: "Après ta sortie, donne ta note. Tes avis aident la communauté.",
+    title: "Reçois un plan personnalisé",
+    desc: "Eve propose une idée claire avec les détails importants.",
   },
   {
-    icon: "🔥",
+    icon: "💾",
     number: "Étape quatre",
-    title: "Les tops remontent",
-    desc: "Les meilleures dates s'accumulent dans la liste des plus populaires.",
+    title: "Sauvegarde tes préférences",
+    desc: "Ton compte permet à Eve de mieux te recommander des sorties avec le temps.",
   },
 ];
 
@@ -34,10 +34,10 @@ export function HowItWorks() {
         label="Comment ça marche"
         title={
           <>
-            Simple. <Script className="text-rose text-[48px] sm:text-[64px] md:text-[80px] inline-block leading-[0.9] my-1">Mémorable.</Script> Parfait.
+            Simple. <Script className="text-rose text-[48px] sm:text-[64px] md:text-[80px] inline-block leading-[0.9] my-1">Adapté.</Script> À toi.
           </>
         }
-        desc="Eve s'occupe de tout — toi, tu vis le moment."
+        desc="Eve apprend ton contexte et propose des sorties qui matchent vraiment."
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 max-w-[1000px] mx-auto">
         {STEPS.map((step) => (

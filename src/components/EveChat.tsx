@@ -2,15 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { GoogleSignInButton } from "./GoogleSignInButton";
-
-type Status = "single" | "couple";
-type Partner = {
-  name?: string;
-  nickname?: string;
-  interests?: string[];
-  vibe?: string;
-  budget?: number;
-};
+import type { OutingType, Profile } from "@/lib/profile";
 
 type Message = {
   role: "user" | "assistant";
@@ -18,29 +10,42 @@ type Message = {
 };
 
 type EveChatProps = {
-  status: Status | null;
-  partner: Partner | null;
+  outingType: OutingType | null;
+  profile: Profile | null;
   hasAccount?: boolean;
 };
 
-const SUGGESTIONS_SINGLE = [
-  "Une 1ère date pas trop intime",
-  "Une activité originale pour briser la glace",
-  "Une sortie casual ce week-end",
-  "Une 2ème date qui sort de l'ordinaire",
-];
-
-const SUGGESTIONS_COUPLE = [
-  "Une date romantique pour notre anniversaire",
-  "Quelque chose pour la St-Valentin",
-  "Une escapade weekend en automne",
-  "Une date originale sous $100",
-];
+const SUGGESTIONS_BY_TYPE: Record<OutingType, string[]> = {
+  couple: [
+    "Une date romantique pour notre anniversaire",
+    "Quelque chose pour la St-Valentin",
+    "Une escapade weekend en automne",
+    "Une date originale sous $100",
+  ],
+  casual_dating: [
+    "Une 1ère date pas trop intime",
+    "Une activité pour briser la glace",
+    "Une 2ème date qui sort de l'ordinaire",
+    "Une sortie casual ce week-end",
+  ],
+  double_date: [
+    "Une sortie à 4 fun et sans malaise",
+    "Quelque chose pour un nouveau couple ami",
+    "Un brunch animé pour 4",
+    "Activité où on peut parler facilement",
+  ],
+  friends: [
+    "Une sortie de groupe pour un anniversaire",
+    "Quelque chose à 6 personnes ce weekend",
+    "Une activité originale pour notre gang",
+    "Un brunch + activité en plein air",
+  ],
+};
 
 const MAX_FREE_MESSAGES = 7;
 const COUNT_STORAGE_KEY = "eve_chat_user_messages";
 
-export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
+export function EveChat({ outingType, profile, hasAccount = false }: EveChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -48,10 +53,10 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const suggestions =
-    status === "couple" ? SUGGESTIONS_COUPLE : SUGGESTIONS_SINGLE;
+  const suggestions = outingType
+    ? SUGGESTIONS_BY_TYPE[outingType]
+    : SUGGESTIONS_BY_TYPE.couple;
 
-  // Load message count from localStorage on mount
   useEffect(() => {
     if (typeof window === "undefined") return;
     const raw = localStorage.getItem(COUNT_STORAGE_KEY);
@@ -71,7 +76,6 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
     }
   }, [messages, streaming]);
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -89,7 +93,6 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
     setInput("");
     setStreaming(true);
 
-    // Track usage (skip for accounts)
     if (!hasAccount) {
       const next = usedMessages + 1;
       setUsedMessages(next);
@@ -106,7 +109,7 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: nextMessages,
-          context: { status, partner },
+          context: { outingType, profile },
         }),
       });
 
@@ -160,7 +163,6 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
     <section className="mb-14">
       <div className="max-w-[780px] mx-auto">
         <div className="bg-warm-white border border-rose/15 rounded-[28px] overflow-hidden shadow-[0_8px_32px_rgba(200,114,90,0.08)] relative">
-          {/* Reset conversation button */}
           {!isEmpty && (
             <button
               onClick={() => setMessages([])}
@@ -170,7 +172,6 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
             </button>
           )}
 
-          {/* Empty state header */}
           {isEmpty && (
             <div className="px-8 pt-12 pb-2 text-center">
               <div className="font-script text-[68px] sm:text-[84px] text-rose mb-2 leading-none">
@@ -182,7 +183,6 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
             </div>
           )}
 
-          {/* Messages */}
           {!isEmpty && (
             <div
               ref={scrollRef}
@@ -198,7 +198,6 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
             </div>
           )}
 
-          {/* Input or limit CTA */}
           {limitReached ? (
             <div className="border-t border-rose/10 bg-gradient-to-br from-light-gold/40 to-blush/30 px-7 py-9 text-center">
               <p className="font-script text-[44px] text-rose leading-none mb-3">
@@ -272,7 +271,6 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
             </div>
           )}
 
-          {/* Suggestions in empty state */}
           {isEmpty && (
             <div className="px-7 pb-8 pt-2">
               <p className="text-[9px] tracking-[0.28em] text-muted mb-4 text-center">
@@ -293,10 +291,9 @@ export function EveChat({ status, partner, hasAccount = false }: EveChatProps) {
           )}
         </div>
 
-        {/* No-account hint */}
         {isEmpty && !hasAccount && (
           <p className="text-center text-[9px] tracking-[0.22em] text-muted mt-5 leading-[1.7]">
-            {MAX_FREE_MESSAGES} conversations gratuites · Aucun compte requis pour commencer
+            {MAX_FREE_MESSAGES} conversations gratuites · Connecte-toi pour continuer après
           </p>
         )}
       </div>
