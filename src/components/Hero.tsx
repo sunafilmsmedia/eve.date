@@ -37,13 +37,7 @@ export function Hero() {
             href="/login"
             className="bg-rose text-white px-[38px] py-[18px] rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all"
           >
-            Créer mon compte gratuitement
-          </a>
-          <a
-            href="#how-it-works"
-            className="bg-transparent text-charcoal border-[1.5px] border-charcoal/20 px-[38px] py-[18px] rounded-full text-[11px] font-semibold tracking-[0.22em] hover:border-rose hover:text-rose transition-colors"
-          >
-            Voir comment ça marche
+            Créer mon compte ou me connecter
           </a>
         </div>
 
