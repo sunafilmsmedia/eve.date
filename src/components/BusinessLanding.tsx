@@ -49,10 +49,27 @@ const ADVANTAGES = [
   },
 ];
 
+const SPONSOR_EXAMPLES = [
+  "2 pour 1 sur les cocktails",
+  "Verre offert à la réservation",
+  "Dessert gratuit pour 2",
+  "20 % sur le menu dégustation",
+  "Surclassement gratuit en spa",
+  "Activité bonus offerte",
+];
+
 const FAQ = [
   {
     q: "Combien ça coûte au total ?",
-    a: "10 $/mois (ou 78 $/an) pour ton abonnement, plus 1-3 $ par réservation confirmée. Aucun frais de paiement, aucun pourcentage.",
+    a: "10 $/mois (ou 78 $/an) pour ton abonnement, plus 1-3 $ par réservation confirmée. Aucun frais de paiement, aucun pourcentage. Le sponsoring d'offre spéciale est optionnel (40 $/mois en plus).",
+  },
+  {
+    q: "Comment fonctionne le sponsoring d'offre ?",
+    a: "Tu crées une offre spéciale (2 pour 1, dessert offert, % de réduction, etc.) et tu paies 40 $/mois supplémentaires. Cette offre est mise en avant auprès des membres Édén : visibilité prioritaire dans les recommandations, badge spécial, mention dans le chat avec Eve.",
+  },
+  {
+    q: "Quelles offres sont autorisées au sponsoring ?",
+    a: "Tout ce qui apporte une vraie valeur ajoutée : promo limitée, item bonus, surclassement, % de réduction, expérience exclusive. Eve approuve chaque offre avant publication pour éviter les pièges marketing.",
   },
   {
     q: "Comment je reçois mon argent ?",
@@ -217,6 +234,95 @@ export function BusinessLanding() {
                   Frais fixe par réservation confirmée. Facturé en fin de mois.
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sponsor option */}
+      <section className="px-6 py-[80px] bg-gradient-to-b from-cream to-warm-white">
+        <div className="max-w-[1000px] mx-auto">
+          <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
+            Option · Sponsoring
+          </p>
+          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-3 text-center leading-[1.2]">
+            Booste une{" "}
+            <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
+              offre spéciale
+            </Script>
+          </h2>
+          <p className="text-center text-[11px] tracking-[0.14em] text-muted mb-12 leading-[1.85] max-w-[640px] mx-auto normal-case">
+            Tu as une offre attractive ? Sponsorise-la pour qu&apos;elle soit mise en avant auprès des membres Édén — ceux qui réservent le plus.
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr,1fr] gap-6">
+            {/* Left: Pricing card */}
+            <div className="bg-gradient-to-br from-charcoal to-[#2a221d] rounded-[28px] p-9 sm:p-12 relative overflow-hidden">
+              <div
+                className="absolute inset-0 opacity-35"
+                style={{
+                  background:
+                    "radial-gradient(circle at 80% 30%, rgba(201, 169, 110, 0.5) 0%, transparent 55%)",
+                }}
+              />
+              <div className="relative">
+                <div className="inline-block bg-gold/20 text-gold text-[9px] font-bold tracking-[0.22em] px-3 py-1.5 rounded-full mb-5">
+                  Add-on
+                </div>
+                <p className="text-[10px] font-bold tracking-[0.32em] text-gold mb-3">
+                  Sponsoring d&apos;offre
+                </p>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-[64px] font-extrabold text-cream leading-none">
+                    $40
+                  </span>
+                  <span className="text-[14px] font-semibold tracking-[0.1em] text-cream/60">
+                    /mois
+                  </span>
+                </div>
+                <p className="text-[10px] font-semibold tracking-[0.18em] text-gold mb-6">
+                  En plus de ton abonnement business
+                </p>
+
+                <ul className="list-none space-y-3 mb-2">
+                  {[
+                    "Visibilité prioritaire dans les recommandations Édén",
+                    "Badge spécial sur ta fiche",
+                    "Mention par Eve dans le chat quand pertinent",
+                    "Notification push aux membres ciblés",
+                    "1 offre active à la fois — modifiable à volonté",
+                  ].map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-3 text-[10px] font-medium tracking-[0.1em] text-cream/85 leading-[1.7] normal-case"
+                    >
+                      <span className="text-gold font-bold flex-shrink-0 mt-0.5">✓</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Right: Examples */}
+            <div className="bg-warm-white border border-rose/15 rounded-[28px] p-7 sm:p-9">
+              <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5">
+                Exemples d&apos;offres
+              </p>
+              <ul className="list-none space-y-3.5 mb-6">
+                {SPONSOR_EXAMPLES.map((ex) => (
+                  <li
+                    key={ex}
+                    className="flex items-start gap-3 text-[11px] tracking-[0.08em] text-charcoal leading-[1.7] normal-case"
+                  >
+                    <span className="text-rose font-bold shrink-0 mt-0.5">→</span>
+                    {ex}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-[9px] tracking-[0.16em] text-muted leading-[1.8] pt-5 border-t border-rose/10 normal-case">
+                Chaque offre est validée par Eve avant publication pour garantir une vraie valeur ajoutée aux membres.
+              </p>
             </div>
           </div>
         </div>
@@ -443,6 +549,27 @@ export function BusinessLanding() {
                   className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40 resize-none"
                 />
               </FormField>
+
+              <div className="bg-light-gold/30 border border-gold/30 rounded-[16px] p-5">
+                <label className="flex items-start gap-3 cursor-pointer mb-4">
+                  <input
+                    type="checkbox"
+                    name="interestedInSponsoring"
+                    className="mt-1 w-4 h-4 accent-rose cursor-pointer"
+                  />
+                  <span className="text-[11px] font-bold tracking-[0.12em] text-charcoal leading-[1.5] normal-case">
+                    Je suis intéressé·e par le sponsoring d&apos;offre spéciale (40 $/mois en plus)
+                  </span>
+                </label>
+                <FormField label="Offre que tu voudrais sponsoriser" hint="(optionnel)">
+                  <textarea
+                    name="sponsoredOffer"
+                    rows={2}
+                    placeholder="Ex : 2 pour 1 sur les cocktails, dessert offert, 20 % sur menu dégustation..."
+                    className="w-full px-5 py-3 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40 resize-none"
+                  />
+                </FormField>
+              </div>
 
               <button
                 type="submit"
