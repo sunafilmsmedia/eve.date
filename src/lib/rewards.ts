@@ -1,7 +1,7 @@
-// Pomme reward tracking — used by future Supabase tables / API routes.
+// Édén reward tracking — used by future Supabase tables / API routes.
 // The UI on the landing page is purely informational.
 
-export type PommeRewardProgress = {
+export type EdenRewardProgress = {
   userId: string;
   subscriptionStatus: "active" | "inactive" | "cancelled";
   completedReservationsCount: number;
@@ -11,22 +11,22 @@ export type PommeRewardProgress = {
     count: number;
   }[];
   rewardUnlocked: boolean;
-  rewardCreditAmount: number; // in CAD cents (e.g. 2500 = $25)
+  rewardCreditCents: number; // CAD cents (10000 = $100)
   rewardCreditUsed: boolean;
   rewardCreditExpiresAt?: string; // ISO 8601 timestamp
 };
 
-export const POMME_REWARD_RULES = {
-  /** User must have active Pomme subscription */
+export const EDEN_REWARD_RULES = {
+  /** User must have active Édén subscription */
   subscriptionRequired: true,
   /** Total confirmed-and-completed reservations needed */
   requiredReservations: 10,
   /** Minimum reservations per month to count the month as eligible */
   minReservationsPerEligibleMonth: 2,
-  /** Total eligible months needed */
-  requiredEligibleMonths: 3,
+  /** Total eligible months needed (= minimum active subscription) */
+  requiredEligibleMonths: 4,
   /** Reward amount in CAD cents */
-  rewardCreditCents: 2500,
+  rewardCreditCents: 10000,
   /** Days before credit expires after unlock */
   creditValidityDays: 90,
 } as const;
@@ -35,23 +35,23 @@ export const POMME_REWARD_RULES = {
  * Determine whether a user has met all reward conditions.
  * Reservations that were cancelled, refunded, or not completed do not count.
  */
-export function evaluateRewardEligibility(progress: PommeRewardProgress): {
+export function evaluateRewardEligibility(progress: EdenRewardProgress): {
   eligible: boolean;
   reasons: string[];
 } {
   const reasons: string[] = [];
 
   if (progress.subscriptionStatus !== "active") {
-    reasons.push("Abonnement Pomme non actif");
+    reasons.push("Abonnement Édén non actif");
   }
-  if (progress.completedReservationsCount < POMME_REWARD_RULES.requiredReservations) {
+  if (progress.completedReservationsCount < EDEN_REWARD_RULES.requiredReservations) {
     reasons.push(
-      `${POMME_REWARD_RULES.requiredReservations - progress.completedReservationsCount} réservations restantes`
+      `${EDEN_REWARD_RULES.requiredReservations - progress.completedReservationsCount} réservations restantes`
     );
   }
-  if (progress.eligibleMonthsCount < POMME_REWARD_RULES.requiredEligibleMonths) {
+  if (progress.eligibleMonthsCount < EDEN_REWARD_RULES.requiredEligibleMonths) {
     reasons.push(
-      `${POMME_REWARD_RULES.requiredEligibleMonths - progress.eligibleMonthsCount} mois admissibles restants`
+      `${EDEN_REWARD_RULES.requiredEligibleMonths - progress.eligibleMonthsCount} mois admissibles restants`
     );
   }
 

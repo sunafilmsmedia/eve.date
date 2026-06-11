@@ -67,11 +67,11 @@ export function BusinessPartner() {
             </Script>
           </>
         }
-        desc="Restaurants, spas, vignobles, expériences uniques — rejoins Eve et fais découvrir ton offre à des couples et célibataires en quête de vraies sorties."
+        desc="Restaurants, spas, vignobles, expériences uniques — rejoins Eve et fais découvrir ton offre à des couples, célibataires et groupes en quête de vraies sorties."
       />
 
       <div className="max-w-[1000px] mx-auto">
-        {/* Pricing — clear, no %, no surprise */}
+        {/* Pricing — subscription + flat fee per reservation */}
         <div className="fade-in bg-charcoal rounded-[28px] p-10 sm:p-14 mb-7 relative overflow-hidden">
           <div
             className="absolute inset-0 opacity-30"
@@ -83,18 +83,21 @@ export function BusinessPartner() {
           <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10">
             <div>
               <p className="text-[10px] font-bold tracking-[0.32em] text-gold mb-4">
-                Inscription
+                Abonnement business
               </p>
-              <div className="flex items-baseline gap-2 mb-3">
+              <div className="flex items-baseline gap-2 mb-2">
                 <span className="text-[64px] font-extrabold text-cream leading-none">
-                  $20
+                  $10
                 </span>
-                <span className="font-script text-[28px] text-gold leading-none">
-                  une fois
+                <span className="text-[14px] font-semibold tracking-[0.1em] text-cream/60">
+                  /mois
                 </span>
               </div>
+              <p className="text-[10px] font-semibold tracking-[0.18em] text-gold mb-4">
+                ou $78/an · économise 42 $
+              </p>
               <p className="text-[10px] tracking-[0.16em] text-cream/60 leading-[1.8]">
-                Frais uniques pour activer ton compte business et passer la vérification.
+                Activer ton compte business, gérer tes services et apparaître dans les recommandations Eve.
               </p>
             </div>
             <div>

@@ -3,8 +3,8 @@ import { SectionHeader, Script } from "./SectionHeader";
 const STEPS = [
   {
     icon: "💳",
-    title: "Abonne-toi à Pomme",
-    desc: "10 $/mois, annulable en tout temps.",
+    title: "Abonne-toi à Édén",
+    desc: "9 $/mois ou 69 $/an. Annulable en tout temps.",
   },
   {
     icon: "📅",
@@ -12,28 +12,29 @@ const STEPS = [
     desc: "Couple, casual, double ou amis — toutes les réservations comptent.",
   },
   {
-    icon: "🍎",
-    title: "Reçois jusqu'à 25 $ en crédit",
-    desc: "Crédit applicable sur ta prochaine sortie admissible.",
+    icon: "🎁",
+    title: "Reçois 100 $ à la 10ème date",
+    desc: "Crédit Eve appliqué directement à ta 10ème sortie admissible.",
   },
 ];
 
 const CONDITIONS = [
-  "Abonnement Pomme actif tout au long de la période",
+  "Abonnement Édén actif tout au long de la période",
   "10 réservations confirmées et complétées via Eve",
-  "Au moins 2 réservations par mois pendant 3 mois minimum",
+  "Au moins 2 réservations par mois",
+  "Minimum 4 mois d'abonnement actif",
   "Les réservations annulées ou non complétées ne comptent pas",
-  "1 récompense par cycle de 10 réservations complétées",
+  "1 récompense par cycle de 10 réservations",
   "Crédit non échangeable contre de l'argent",
   "Crédit non transférable",
   "Crédit valide 90 jours après le déblocage",
 ];
 
-export function PommeReward() {
+export function EdenReward() {
   return (
     <section className="px-6 py-[120px] bg-gradient-to-b from-warm-white to-cream">
       <SectionHeader
-        label="Récompense Pomme"
+        label="Récompense Édén"
         title={
           <>
             Ta fidélité est{" "}
@@ -42,7 +43,7 @@ export function PommeReward() {
             </Script>
           </>
         }
-        desc="Jusqu'à 25 $ en crédit Eve pour ta prochaine sortie."
+        desc="100 $ en crédit Eve à ta 10ème date réservée via Édén."
       />
 
       <div className="max-w-[1000px] mx-auto">
@@ -57,18 +58,18 @@ export function PommeReward() {
           />
           <div className="relative">
             <p className="text-[10px] font-bold tracking-[0.32em] text-gold mb-6">
-              Après 10 dates réservées
+              À ta 10ème date réservée via Eve
             </p>
             <div className="flex items-baseline justify-center gap-3 mb-4">
               <span className="font-script text-[40px] sm:text-[56px] text-cream/80 leading-none">
-                jusqu&apos;à
+                reçois
               </span>
               <span className="text-[88px] sm:text-[124px] font-extrabold text-gold leading-none">
-                25$
+                100$
               </span>
             </div>
             <p className="text-[12px] tracking-[0.18em] text-cream/70 leading-[1.7] max-w-md mx-auto normal-case">
-              en crédit Eve pour ta prochaine sortie.
+              en crédit Eve appliqué directement sur ta 10ème sortie.
             </p>
           </div>
         </div>
@@ -116,7 +117,7 @@ export function PommeReward() {
             ))}
           </ul>
           <p className="text-[9px] tracking-[0.16em] text-muted mt-6 pt-5 border-t border-rose/10 leading-[1.7] normal-case">
-            La récompense est créditée automatiquement sur ton compte une fois toutes les conditions remplies.
+            La récompense est créditée automatiquement à ta 10ème sortie une fois toutes les conditions remplies.
           </p>
         </div>
       </div>

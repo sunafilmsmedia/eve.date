@@ -4,7 +4,7 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { Examples } from "@/components/Examples";
 import { Categories } from "@/components/Categories";
 import { Pricing } from "@/components/Pricing";
-import { PommeReward } from "@/components/PommeReward";
+import { EdenReward } from "@/components/EdenReward";
 import { BusinessPartner } from "@/components/BusinessPartner";
 import { Suggestions } from "@/components/Suggestions";
 import { Waitlist } from "@/components/Waitlist";
@@ -20,7 +20,7 @@ export default function Home() {
       <Examples />
       <Categories />
       <Pricing />
-      <PommeReward />
+      <EdenReward />
       <BusinessPartner />
       <Suggestions />
       <Waitlist />
