@@ -1,23 +1,30 @@
 import { SectionHeader, Script } from "./SectionHeader";
 
 const FREE_FEATURES = [
-  { text: "Idées de dates illimitées", locked: false },
-  { text: "Recommandations Eve AI personnalisées", locked: false },
-  { text: "Catégories curées + ratings", locked: false },
-  { text: "Réservation directe (frais standards)", locked: false },
-  { text: "Proposer des idées", locked: false },
+  { text: "Idées de sorties personnalisées", locked: false },
+  { text: "Recommandations selon ton budget", locked: false },
+  { text: "Catégories curées par ambiance", locked: false },
+  { text: "Suggestions pour couple, casual dating et amis", locked: false },
+  { text: "Chat Eve avec limite raisonnable", locked: false },
+  { text: "Quelques favoris pour garder tes idées", locked: false },
+  { text: "Plans complets étape par étape", locked: true },
+  { text: "Adresses et conseils pratiques", locked: true },
+  { text: "Réductions partenaires", locked: true },
   { text: "Annulation sans frais", locked: true },
-  { text: "Tarif réduit par réservation", locked: true },
-  { text: "Accès anticipé aux nouveautés", locked: true },
+  { text: "Expériences premium", locked: true },
+  { text: "Récompense fidélité", locked: true },
 ];
 
 const POMME_FEATURES = [
   "Tout le plan gratuit",
-  "Tarif réduit sur chaque réservation",
-  "Zéro frais d'annulation",
-  "Accès anticipé aux nouvelles dates",
-  "Détails complets : adresses, conseils, transport",
-  "Support prioritaire 7/7",
+  "Plans complets prêts à vivre",
+  "Adresses exactes, horaires, transport, conseils",
+  "Tarifs réduits chez certains partenaires",
+  "Zéro frais d'annulation sur sorties admissibles",
+  "Accès aux expériences premium",
+  "Accès anticipé aux nouveautés",
+  "Support prioritaire",
+  "Récompense fidélité jusqu'à 25 $ après 10 dates",
 ];
 
 function AppleIcon({ className = "" }: { className?: string }) {
@@ -51,11 +58,11 @@ export function Pricing() {
             </Script>
           </>
         }
-        desc="Idées gratuites pour tous. Abonnement Pomme pour les avantages premium et le tarif préférentiel."
+        desc="Le plan gratuit donne de l'inspiration. Le plan Pomme te donne des plans prêts à vivre."
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-7 max-w-[800px] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-7 max-w-[820px] mx-auto">
         {/* Gratuit */}
-        <div className="fade-in bg-warm-white border-[1.5px] border-rose/15 rounded-[24px] p-12 relative hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(200,114,90,0.15)] transition-all">
+        <div className="fade-in bg-warm-white border-[1.5px] border-rose/15 rounded-[24px] p-10 sm:p-12 relative hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(200,114,90,0.15)] transition-all">
           <div className="font-script text-[36px] text-rose mb-1.5 leading-none">
             Gratuit
           </div>
@@ -63,13 +70,13 @@ export function Pricing() {
             $0
           </div>
           <div className="text-[10px] font-semibold tracking-[0.18em] text-muted mb-8">
-            Pour toujours
+            Pour trouver l&apos;inspiration
           </div>
           <ul className="list-none mb-9">
             {FREE_FEATURES.map((f) => (
               <li
                 key={f.text}
-                className={`flex items-start gap-3 text-[10px] font-medium tracking-[0.14em] py-2.5 border-b border-rose/8 leading-[1.6] ${
+                className={`flex items-start gap-3 text-[10px] font-medium tracking-[0.14em] py-2 border-b border-rose/8 leading-[1.6] ${
                   f.locked ? "opacity-40 line-through text-muted" : "text-muted"
                 }`}
               >
@@ -85,12 +92,12 @@ export function Pricing() {
             ))}
           </ul>
           <button className="w-full bg-transparent border-[1.5px] border-charcoal text-charcoal py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-charcoal hover:text-cream transition-colors cursor-pointer">
-            Commencer
+            Commencer gratuitement
           </button>
         </div>
 
         {/* Pomme */}
-        <div className="fade-in bg-charcoal border-[1.5px] border-rose rounded-[24px] p-12 relative hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(200,114,90,0.15)] transition-all">
+        <div className="fade-in bg-charcoal border-[1.5px] border-rose rounded-[24px] p-10 sm:p-12 relative hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(200,114,90,0.15)] transition-all">
           <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-rose text-white text-[9px] font-extrabold tracking-[0.22em] px-[18px] py-1.5 rounded-full whitespace-nowrap">
             Plus populaire
           </div>
@@ -100,17 +107,25 @@ export function Pricing() {
               Pomme
             </div>
           </div>
-          <div className="text-[64px] font-extrabold tracking-[0.01em] text-cream leading-none mb-1.5">
-            $9
+          <div className="flex items-baseline gap-2 mb-1.5">
+            <span className="text-[64px] font-extrabold tracking-[0.01em] text-cream leading-none">
+              $10
+            </span>
+            <span className="text-[14px] font-semibold tracking-[0.1em] text-cream/60">
+              /mois
+            </span>
           </div>
-          <div className="text-[10px] font-semibold tracking-[0.18em] text-cream/50 mb-8">
-            / mois · Annulable
+          <div className="text-[10px] font-semibold tracking-[0.18em] text-cream/50 mb-3">
+            Annulable en tout temps
           </div>
+          <p className="text-[10px] tracking-[0.14em] text-cream/75 leading-[1.7] mb-7 normal-case">
+            Pour ceux qui veulent arrêter de chercher quoi faire et planifier des sorties prêtes à vivre.
+          </p>
           <ul className="list-none mb-9">
             {POMME_FEATURES.map((f) => (
               <li
                 key={f}
-                className="flex items-start gap-3 text-[10px] font-medium tracking-[0.14em] py-2.5 border-b border-white/6 leading-[1.6] text-cream/75"
+                className="flex items-start gap-3 text-[10px] font-medium tracking-[0.14em] py-2 border-b border-white/6 leading-[1.6] text-cream/85"
               >
                 <span className="text-gold font-bold flex-shrink-0 mt-px">✓</span>
                 {f}
@@ -124,7 +139,7 @@ export function Pricing() {
       </div>
 
       <p className="text-center text-[10px] tracking-[0.18em] text-muted mt-10 max-w-xl mx-auto leading-[1.8]">
-        Toutes les réservations passent par Eve. Frais standards pour le plan gratuit, tarif préférentiel pour les membres Pomme.
+        Toutes les réservations passent par Eve. Le paiement se fait directement au commerce. Pomme = tarif préférentiel + plans complets.
       </p>
     </section>
   );
