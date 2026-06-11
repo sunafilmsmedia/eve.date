@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SectionHeader, Script } from "./SectionHeader";
 
 const HOW_IT_WORKS = [
@@ -213,14 +214,14 @@ export function BusinessPartner() {
 
         {/* CTA */}
         <div className="fade-in text-center">
-          <button
-            disabled
-            className="bg-rose/40 text-white px-10 py-[18px] rounded-full text-[11px] font-bold tracking-[0.22em] cursor-not-allowed"
+          <Link
+            href="/business"
+            className="inline-block bg-rose text-white px-10 py-[18px] rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all"
           >
-            Bientôt · Liste d&apos;attente partenaires ✨
-          </button>
+            Voir les détails & s&apos;inscrire →
+          </Link>
           <p className="text-[9px] tracking-[0.22em] text-muted mt-5">
-            Lancement aux businesses prévu dans les prochaines semaines
+            FAQ complète, conditions et formulaire d&apos;inscription
           </p>
         </div>
       </div>
