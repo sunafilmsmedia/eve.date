@@ -273,8 +273,30 @@ export function EveChat({ outingType, profile, hasAccount = false }: EveChatProp
 
           {isEmpty && (
             <div className="px-7 pb-8 pt-2">
+              {/* Special "Ce soir" CTA — generates 3 quick plans */}
+              <button
+                onClick={() =>
+                  sendMessage(
+                    "Donne-moi 3 plans pour ce soir adaptés à mon profil : un plan safe, un plan original et un plan plus spécial. Sois bref pour chacun."
+                  )
+                }
+                className="w-full bg-gradient-to-br from-charcoal to-[#2a221d] text-cream rounded-2xl p-5 mb-5 hover:-translate-y-0.5 transition-all cursor-pointer text-left"
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-[9px] font-bold tracking-[0.28em] text-gold mb-1.5">
+                      🌙 Trouve-moi quoi faire ce soir
+                    </p>
+                    <p className="text-[10px] tracking-[0.1em] text-cream/70 leading-[1.7] normal-case">
+                      Eve te propose 3 plans en 30 secondes — un safe, un original, un spécial.
+                    </p>
+                  </div>
+                  <span className="text-gold text-[22px] shrink-0">→</span>
+                </div>
+              </button>
+
               <p className="text-[9px] tracking-[0.28em] text-muted mb-4 text-center">
-                Suggestions
+                Ou pose une question précise
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {suggestions.map((s) => (

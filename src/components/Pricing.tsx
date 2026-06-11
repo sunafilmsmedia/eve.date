@@ -40,7 +40,7 @@ export function Pricing() {
             </Script>
           </>
         }
-        desc="Le plan gratuit donne de l'inspiration. Édén te donne des plans prêts à vivre."
+        desc="Gratuit t'inspire. Édén te dit exactement quoi faire."
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-7 max-w-[820px] mx-auto">
         {/* Gratuit */}

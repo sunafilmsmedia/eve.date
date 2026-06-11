@@ -21,15 +21,15 @@ export function Hero() {
         <h1 className="font-sans text-[36px] sm:text-[52px] md:text-[68px] font-extrabold leading-[1.08] tracking-[0.01em] text-charcoal mb-3">
           Des sorties
           <RotatingScript className="block text-[56px] sm:text-[80px] md:text-[108px] text-rose leading-[0.9] my-1.5" />
-          avec les bonnes personnes
+          sans passer une heure à chercher
         </h1>
 
         <p className="font-script text-[24px] sm:text-[34px] md:text-[40px] text-muted mb-8 leading-[1.1]">
-          Eve s&apos;adapte à ton contexte.
+          Eve te dit quoi faire.
         </p>
 
         <p className="text-[12px] tracking-[0.18em] text-muted leading-[1.9] max-w-[640px] mx-auto mb-14 normal-case">
-          EveAI t&apos;aide à créer des dates, double dates et sorties entre amis selon la personnalité, le budget, l&apos;occasion et l&apos;ambiance que tu veux créer.
+          Un plan adapté à ton budget, ta ville, la saison et les personnes avec qui tu sors — en moins de 2 minutes. Couple, casual dating, double date ou sortie entre amis.
         </p>
 
         <div className="flex items-center justify-center gap-4 flex-wrap">
