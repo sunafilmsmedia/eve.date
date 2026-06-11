@@ -63,7 +63,7 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/dates");
+  redirect("/account");
 }
 
 export async function signup(formData: FormData) {
@@ -74,7 +74,7 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp({ email, password });
 
   if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    redirect(`/signup?error=${encodeURIComponent(error.message)}`);
   }
 
   redirect("/login?message=Compte créé, vérifie ton email pour confirmer puis connecte-toi.");

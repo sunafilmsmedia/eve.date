@@ -34,10 +34,16 @@ export function Hero() {
 
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <a
-            href="/login"
+            href="/signup"
             className="bg-rose text-white px-[38px] py-[18px] rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all"
           >
-            Créer mon compte ou me connecter
+            Créer mon compte
+          </a>
+          <a
+            href="/login"
+            className="bg-transparent text-charcoal border-[1.5px] border-charcoal/20 px-[38px] py-[18px] rounded-full text-[11px] font-semibold tracking-[0.22em] hover:border-rose hover:text-rose transition-colors"
+          >
+            Me connecter
           </a>
         </div>
 

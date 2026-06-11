@@ -1,17 +1,16 @@
 import Link from "next/link";
 import { Script } from "@/components/Script";
 import { GoogleSignInButton } from "@/components/GoogleSignInButton";
-import { login } from "./actions";
+import { signup } from "@/app/login/actions";
 
-type SearchParams = Promise<{ error?: string; message?: string; next?: string }>;
+type SearchParams = Promise<{ error?: string; message?: string }>;
 
-export default async function LoginPage({
+export default async function SignupPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
-  const { error, message, next } = await searchParams;
-  const safeNext = next && next.startsWith("/") ? next : "/account";
+  const { error, message } = await searchParams;
 
   return (
     <main className="min-h-screen flex items-center justify-center px-6 py-20">
@@ -26,19 +25,19 @@ export default async function LoginPage({
           </span>
         </Link>
         <p className="text-center font-script text-[24px] text-muted mb-10">
-          bon retour
+          bienvenue
         </p>
 
         <div className="bg-warm-white border border-rose/15 rounded-[24px] p-8 sm:p-10 shadow-[0_24px_60px_rgba(200,114,90,0.12)]">
           <h1 className="font-sans text-[16px] sm:text-[18px] font-extrabold tracking-[0.14em] text-charcoal mb-2 leading-[1.4]">
-            Connecte-toi pour{" "}
+            Crée ton compte pour{" "}
             <Script className="text-rose text-[28px] sm:text-[34px] inline-block leading-[0.9]">
-              continuer
+              personnaliser
             </Script>{" "}
-            l&apos;aventure
+            tes sorties
           </h1>
           <p className="text-[10px] tracking-[0.14em] text-muted mb-8 leading-[1.8] normal-case">
-            Retrouve tes profils, ton historique et ta progression vers Édén.
+            Eve apprend à connaître tes préférences, tes relations et tes sorties passées pour te proposer des idées de plus en plus personnalisées.
           </p>
 
           {message && (
@@ -54,8 +53,8 @@ export default async function LoginPage({
 
           <div className="flex flex-col gap-3 mb-6">
             <GoogleSignInButton
-              next={safeNext}
-              label="Se connecter avec Google"
+              next="/start"
+              label="Continuer avec Google"
               variant="primary"
               fullWidth
             />
@@ -96,24 +95,29 @@ export default async function LoginPage({
                 name="password"
                 type="password"
                 required
-                placeholder="••••••••"
+                minLength={6}
+                placeholder="Au moins 6 caractères"
                 className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[11px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
               />
             </div>
 
             <button
-              formAction={login}
+              formAction={signup}
               className="w-full bg-rose text-white py-3.5 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose transition-colors cursor-pointer mt-2"
             >
-              Me connecter
+              Créer mon compte
             </button>
           </form>
+
+          <p className="text-[9px] tracking-[0.16em] text-muted mt-7 leading-[1.8] normal-case">
+            Tes informations servent uniquement à personnaliser tes recommandations. Tu peux modifier ou supprimer tes profils à tout moment.
+          </p>
         </div>
 
         <p className="text-center mt-7 text-[10px] tracking-[0.18em] text-muted">
-          Pas encore de compte ?{" "}
-          <Link href="/signup" className="text-rose hover:text-deep-rose transition-colors font-bold">
-            Créer mon compte
+          Tu as déjà un compte ?{" "}
+          <Link href="/login" className="text-rose hover:text-deep-rose transition-colors font-bold">
+            Me connecter
           </Link>
         </p>
 
