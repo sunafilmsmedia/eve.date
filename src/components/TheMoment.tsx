@@ -1,5 +1,15 @@
 import Link from "next/link";
-import { Script } from "./Script";
+import { RotatingScript } from "./RotatingScript";
+
+const MOMENT_PHRASES = [
+  "on fait quoi ce soir ?",
+  "t'as réservé ?",
+  "encore ça ?",
+  "on fait jamais rien",
+  "on devrait sortir",
+  "on a rien de prévu ?",
+  "tu sais où on va ?",
+];
 
 export function TheMoment() {
   return (
@@ -14,11 +24,15 @@ export function TheMoment() {
         </p>
 
         <h2 className="font-sans text-[28px] sm:text-[40px] md:text-[52px] font-extrabold tracking-[0.01em] text-charcoal mb-10 leading-[1.1]">
-          «{" "}
-          <Script className="text-rose text-[60px] sm:text-[88px] md:text-[112px] inline-block leading-[0.85]">
-            on fait quoi ce soir ?
-          </Script>{" "}
-          »
+          <span className="text-rose">«</span>{" "}
+          <RotatingScript
+            words={MOMENT_PHRASES}
+            showHearts={false}
+            intervalMs={3400}
+            fadeMs={420}
+            className="text-rose text-[44px] sm:text-[64px] md:text-[88px] leading-[0.95] align-baseline"
+          />{" "}
+          <span className="text-rose">»</span>
         </h2>
 
         <div className="bg-warm-white border border-rose/15 rounded-[24px] p-7 sm:p-10 mb-8 text-left max-w-[620px] mx-auto">

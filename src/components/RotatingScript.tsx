@@ -43,12 +43,16 @@ type RotatingScriptProps = {
   className?: string;
   intervalMs?: number;
   fadeMs?: number;
+  words?: string[];
+  showHearts?: boolean;
 };
 
 export function RotatingScript({
   className = "",
   intervalMs = 2800,
   fadeMs = 380,
+  words = WORDS,
+  showHearts = true,
 }: RotatingScriptProps) {
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -62,7 +66,7 @@ export function RotatingScript({
       setHasStarted(true);
       setTransitionKey((k) => k + 1);
       timeoutRef.current = setTimeout(() => {
-        setIndex((i) => (i + 1) % WORDS.length);
+        setIndex((i) => (i + 1) % words.length);
         setVisible(true);
       }, fadeMs);
     }, intervalMs);
@@ -71,11 +75,11 @@ export function RotatingScript({
       clearInterval(tick);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [intervalMs, fadeMs]);
+  }, [intervalMs, fadeMs, words.length]);
 
   return (
     <span className={`relative inline-block ${className}`}>
-      {hasStarted && (
+      {showHearts && hasStarted && (
         <span className="absolute inset-0 pointer-events-none" aria-hidden>
           {HEARTS.map((h, i) => (
             <span
@@ -102,9 +106,9 @@ export function RotatingScript({
       )}
       <span
         style={{ transitionDuration: `${fadeMs}ms` }}
-        className={`font-script transition-opacity block ${visible ? "opacity-100" : "opacity-0"}`}
+        className={`font-script transition-opacity ${visible ? "opacity-100" : "opacity-0"}`}
       >
-        {WORDS[index]}
+        {words[index]}
       </span>
     </span>
   );
