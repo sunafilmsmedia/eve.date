@@ -114,11 +114,50 @@ const BUSINESS_TYPES = [
 
 export function BusinessLanding() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    // Future: POST to /api/business-waitlist
+    if (submitting) return;
+    setErrorMsg(null);
+    setSubmitting(true);
+
+    const fd = new FormData(e.currentTarget);
+    const payload = {
+      business_name: String(fd.get("businessName") ?? "").trim(),
+      business_type: String(fd.get("businessType") ?? "").trim(),
+      email: String(fd.get("email") ?? "").trim(),
+      phone: String(fd.get("phone") ?? "").trim() || undefined,
+      website: String(fd.get("website") ?? "").trim(),
+      tax_number: String(fd.get("taxNumber") ?? "").trim(),
+      billing_address: String(fd.get("billingAddress") ?? "").trim(),
+      description: String(fd.get("description") ?? "").trim() || undefined,
+      interested_in_sponsoring: fd.get("interestedInSponsoring") === "on",
+      sponsored_offer:
+        String(fd.get("sponsoredOffer") ?? "").trim() || undefined,
+    };
+
+    try {
+      const res = await fetch("/api/business/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json()) as { success?: boolean; error?: string };
+      if (!res.ok || !data.success) {
+        throw new Error(data.error ?? "Erreur lors de l'envoi");
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setErrorMsg(
+        err instanceof Error
+          ? err.message
+          : "Erreur lors de l'envoi. Réessaye dans un moment."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -571,11 +610,22 @@ export function BusinessLanding() {
                 </FormField>
               </div>
 
+              {errorMsg && (
+                <div className="bg-rose/10 border border-rose/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg leading-[1.6] normal-case">
+                  {errorMsg}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full bg-rose text-white py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all cursor-pointer mt-2"
+                disabled={submitting}
+                className={`w-full py-4 rounded-full text-[11px] font-bold tracking-[0.22em] transition-all cursor-pointer mt-2 ${
+                  submitting
+                    ? "bg-rose/50 text-white cursor-not-allowed"
+                    : "bg-rose text-white hover:bg-deep-rose hover:-translate-y-0.5"
+                }`}
               >
-                Envoyer ma demande →
+                {submitting ? "Envoi en cours..." : "Envoyer ma demande →"}
               </button>
 
               <p className="text-center text-[9px] tracking-[0.18em] text-muted mt-3 leading-[1.7] normal-case">
