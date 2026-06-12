@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { saveProfile, type CoupleProfile } from "@/lib/profile";
+import { type CoupleProfile } from "@/lib/profile";
+import { persistProfile } from "./persistProfile";
 import {
   FieldLabel,
   TextInput,
@@ -66,7 +67,7 @@ export function CoupleForm() {
   const [likes, setLikes] = useState<string[]>([]);
   const [dislikes, setDislikes] = useState<string[]>([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const profile: CoupleProfile = {
       type: "couple",
@@ -81,7 +82,7 @@ export function CoupleForm() {
       likes: likes.length ? likes : undefined,
       dislikes: dislikes.length ? dislikes : undefined,
     };
-    saveProfile(profile);
+    await persistProfile(profile);
     router.push("/dates");
   };
 

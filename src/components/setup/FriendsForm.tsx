@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { saveProfile, type FriendsProfile, type City } from "@/lib/profile";
+import { type FriendsProfile, type City } from "@/lib/profile";
+import { persistProfile } from "./persistProfile";
 import {
   FieldLabel,
   TextInput,
@@ -70,7 +71,7 @@ export function FriendsForm() {
   const [preferredActivities, setPreferredActivities] = useState<string[]>([]);
   const [avoidActivities, setAvoidActivities] = useState<string[]>([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const profile: FriendsProfile = {
       type: "friends",
@@ -88,7 +89,7 @@ export function FriendsForm() {
       preferredActivities,
       avoidActivities: avoidActivities.length ? avoidActivities : undefined,
     };
-    saveProfile(profile);
+    await persistProfile(profile);
     router.push("/dates");
   };
 

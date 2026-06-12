@@ -18,6 +18,9 @@ import {
 import {
   loadOutingType,
   loadProfile,
+  loadProfileFromSupabase,
+  saveProfile,
+  saveOutingType,
   getDisplayName,
   type OutingType,
   type Profile,
@@ -124,12 +127,24 @@ export function DatesFeed() {
     }
 
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
       if (!data.user) {
         router.replace("/login?next=/dates");
         return;
       }
       setUserEmail(data.user.email ?? null);
+
+      // Prefer Supabase profile; fall back to localStorage
+      const dbProfile = await loadProfileFromSupabase(supabase, data.user.id);
+      if (dbProfile) {
+        saveProfile(dbProfile);
+        saveOutingType(dbProfile.type);
+        setOutingType(dbProfile.type);
+        setProfile(dbProfile);
+        setReady(true);
+        return;
+      }
 
       const t = loadOutingType();
       if (!t) {
@@ -144,7 +159,7 @@ export function DatesFeed() {
       setOutingType(t);
       setProfile(p);
       setReady(true);
-    });
+    })();
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       setUserEmail(session?.user?.email ?? null);

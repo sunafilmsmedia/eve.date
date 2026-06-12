@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  saveProfile,
   type DoubleDateProfile,
   type City,
 } from "@/lib/profile";
+import { persistProfile } from "./persistProfile";
 import {
   FieldLabel,
   TagSelector,
@@ -63,7 +63,7 @@ export function DoubleForm() {
   const [preferredActivities, setPreferredActivities] = useState<string[]>([]);
   const [avoidActivities, setAvoidActivities] = useState<string[]>([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const profile: DoubleDateProfile = {
       type: "double_date",
@@ -79,7 +79,7 @@ export function DoubleForm() {
       preferredActivities,
       avoidActivities: avoidActivities.length ? avoidActivities : undefined,
     };
-    saveProfile(profile);
+    await persistProfile(profile);
     router.push("/dates");
   };
 

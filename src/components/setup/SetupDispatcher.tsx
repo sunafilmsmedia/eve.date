@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
-import { loadOutingType, type OutingType } from "@/lib/profile";
+import {
+  loadOutingType,
+  loadProfileFromSupabase,
+  saveOutingType,
+  saveProfile,
+  type OutingType,
+} from "@/lib/profile";
 import { CoupleForm } from "./CoupleForm";
 import { CasualForm } from "./CasualForm";
 import { DoubleForm } from "./DoubleForm";
@@ -39,11 +45,21 @@ export function SetupDispatcher() {
       return;
     }
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
       if (!data.user) {
         router.replace("/login?next=/avatar");
         return;
       }
+
+      // Try loading existing profile from Supabase first
+      const supabaseProfile = await loadProfileFromSupabase(supabase, data.user.id);
+      if (supabaseProfile) {
+        // Hydrate localStorage so the form reads its current values
+        saveProfile(supabaseProfile);
+        saveOutingType(supabaseProfile.type);
+      }
+
       const t = loadOutingType();
       if (!t) {
         router.replace("/start");
@@ -51,7 +67,7 @@ export function SetupDispatcher() {
       }
       setType(t);
       setReady(true);
-    });
+    })();
   }, [router]);
 
   if (!ready || !type) {

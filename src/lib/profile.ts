@@ -175,3 +175,100 @@ export function getDisplayName(profile: Profile | null): string | null {
   }
   return null; // Other types don't have a single "name"
 }
+
+// ============================================================
+// SUPABASE INTEGRATION
+// ============================================================
+
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+export type ReservationRow = {
+  id: string;
+  user_id: string;
+  date_idea_id: string;
+  scheduled_for: string | null;
+  status: "pending" | "confirmed" | "completed" | "cancelled";
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  completed_at: string | null;
+};
+
+export async function loadProfileFromSupabase(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<Profile | null> {
+  const { data, error } = await supabase
+    .from("user_profiles")
+    .select("outing_type, profile_data")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  const profileData = (data.profile_data ?? {}) as Record<string, unknown>;
+  return {
+    ...profileData,
+    type: data.outing_type as OutingType,
+  } as unknown as Profile;
+}
+
+export async function saveProfileToSupabase(
+  supabase: SupabaseClient,
+  userId: string,
+  profile: Profile
+): Promise<{ error: string | null }> {
+  const { type, ...rest } = profile as Profile & { type: OutingType };
+  const profileData = rest as Record<string, unknown>;
+
+  const { error } = await supabase.from("user_profiles").upsert(
+    {
+      user_id: userId,
+      outing_type: type,
+      profile_data: profileData,
+    },
+    { onConflict: "user_id" }
+  );
+
+  return { error: error?.message ?? null };
+}
+
+export async function countCompletedReservations(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<number> {
+  const { count } = await supabase
+    .from("reservations")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("status", "completed");
+  return count ?? 0;
+}
+
+export async function loadReservations(
+  supabase: SupabaseClient,
+  userId: string,
+  limit = 20
+): Promise<ReservationRow[]> {
+  const { data } = await supabase
+    .from("reservations")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  return (data as ReservationRow[] | null) ?? [];
+}
+
+export async function createReservation(
+  supabase: SupabaseClient,
+  userId: string,
+  dateIdeaId: string,
+  scheduledFor?: string
+): Promise<{ error: string | null }> {
+  const { error } = await supabase.from("reservations").insert({
+    user_id: userId,
+    date_idea_id: dateIdeaId,
+    scheduled_for: scheduledFor ?? null,
+  });
+  return { error: error?.message ?? null };
+}

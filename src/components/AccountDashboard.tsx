@@ -4,16 +4,18 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
-import { loadOutingType, loadProfile, getDisplayName, type OutingType, type Profile } from "@/lib/profile";
+import {
+  countCompletedReservations,
+  getDisplayName,
+  loadProfileFromSupabase,
+  loadReservations,
+  type OutingType,
+  type Profile,
+  type ReservationRow,
+} from "@/lib/profile";
+import { DATES } from "@/lib/dates";
 import { EDEN_REWARD_RULES } from "@/lib/rewards";
 import { Script } from "./Script";
-
-type PastDate = {
-  id: string;
-  title: string;
-  date: string;
-  status: "completed" | "upcoming" | "cancelled";
-};
 
 const TYPE_LABELS: Record<OutingType, string> = {
   couple: "Couple",
@@ -22,8 +24,21 @@ const TYPE_LABELS: Record<OutingType, string> = {
   friends: "Sorties entre amis",
 };
 
-const COMPLETED_KEY = "eve_completed_dates";
-const HISTORY_KEY = "eve_date_history";
+const DATE_TITLE_LOOKUP = new Map(DATES.map((d) => [d.id, d.title]));
+
+function formatDate(iso: string | null): string {
+  if (!iso) return "Date à confirmer";
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString("fr-CA", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  } catch {
+    return iso;
+  }
+}
 
 function progressPhrase(completed: number): string {
   if (completed >= 10) return "L'Édén est à toi";
@@ -41,7 +56,7 @@ export function AccountDashboard() {
   const [outingType, setOutingType] = useState<OutingType | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [completedDates, setCompletedDates] = useState(0);
-  const [pastDates, setPastDates] = useState<PastDate[]>([]);
+  const [reservations, setReservations] = useState<ReservationRow[]>([]);
 
   useEffect(() => {
     if (
@@ -52,28 +67,31 @@ export function AccountDashboard() {
       return;
     }
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
       if (!data.user) {
         router.replace("/login?next=/account");
         return;
       }
+      const userId = data.user.id;
       setUserEmail(data.user.email ?? null);
-      setOutingType(loadOutingType());
-      setProfile(loadProfile());
 
-      // Read mock progress data from localStorage (future: from Supabase)
-      const raw = localStorage.getItem(COMPLETED_KEY);
-      setCompletedDates(raw ? Math.max(0, parseInt(raw, 10) || 0) : 0);
+      // Load everything in parallel
+      const [profileFromDb, completedCount, recentReservations] =
+        await Promise.all([
+          loadProfileFromSupabase(supabase, userId),
+          countCompletedReservations(supabase, userId),
+          loadReservations(supabase, userId, 10),
+        ]);
 
-      const histRaw = localStorage.getItem(HISTORY_KEY);
-      if (histRaw) {
-        try {
-          setPastDates(JSON.parse(histRaw) as PastDate[]);
-        } catch {}
+      if (profileFromDb) {
+        setProfile(profileFromDb);
+        setOutingType(profileFromDb.type);
       }
-
+      setCompletedDates(completedCount);
+      setReservations(recentReservations);
       setReady(true);
-    });
+    })();
   }, [router]);
 
   if (!ready) {
@@ -242,7 +260,7 @@ export function AccountDashboard() {
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5">
             Tes sorties planifiées
           </p>
-          {pastDates.length === 0 ? (
+          {reservations.length === 0 ? (
             <div className="text-center py-10">
               <p className="font-script text-rose text-[40px] mb-2 leading-none">
                 vide pour l&apos;instant
@@ -259,34 +277,47 @@ export function AccountDashboard() {
             </div>
           ) : (
             <ul className="list-none space-y-3">
-              {pastDates.map((d) => (
-                <li
-                  key={d.id}
-                  className="flex items-center justify-between gap-4 py-3 border-b border-rose/10 last:border-0"
-                >
-                  <div>
-                    <p className="text-[12px] font-bold tracking-[0.08em] text-charcoal mb-1">
-                      {d.title}
-                    </p>
-                    <p className="text-[9px] tracking-[0.18em] text-muted">{d.date}</p>
-                  </div>
-                  <span
-                    className={`text-[9px] font-bold tracking-[0.18em] uppercase px-3 py-1.5 rounded-full ${
-                      d.status === "completed"
-                        ? "bg-rose/10 text-rose"
-                        : d.status === "upcoming"
-                          ? "bg-gold/20 text-deep-rose"
-                          : "bg-muted/20 text-muted"
-                    }`}
+              {reservations.map((r) => {
+                const title =
+                  DATE_TITLE_LOOKUP.get(r.date_idea_id) ?? r.date_idea_id;
+                const dateLabel = formatDate(r.scheduled_for ?? r.created_at);
+                const statusLabel =
+                  r.status === "completed"
+                    ? "Complétée"
+                    : r.status === "confirmed"
+                      ? "Confirmée"
+                      : r.status === "cancelled"
+                        ? "Annulée"
+                        : "Planifiée";
+                const statusClass =
+                  r.status === "completed"
+                    ? "bg-rose/10 text-rose"
+                    : r.status === "confirmed"
+                      ? "bg-gold/20 text-deep-rose"
+                      : r.status === "cancelled"
+                        ? "bg-muted/20 text-muted"
+                        : "bg-light-gold/40 text-deep-rose";
+                return (
+                  <li
+                    key={r.id}
+                    className="flex items-center justify-between gap-4 py-3 border-b border-rose/10 last:border-0"
                   >
-                    {d.status === "completed"
-                      ? "Complétée"
-                      : d.status === "upcoming"
-                        ? "À venir"
-                        : "Annulée"}
-                  </span>
-                </li>
-              ))}
+                    <div>
+                      <p className="text-[12px] font-bold tracking-[0.08em] text-charcoal mb-1">
+                        {title}
+                      </p>
+                      <p className="text-[9px] tracking-[0.18em] text-muted">
+                        {dateLabel}
+                      </p>
+                    </div>
+                    <span
+                      className={`text-[9px] font-bold tracking-[0.18em] uppercase px-3 py-1.5 rounded-full ${statusClass}`}
+                    >
+                      {statusLabel}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
