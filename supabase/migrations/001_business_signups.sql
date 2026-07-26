@@ -19,7 +19,12 @@ CREATE TABLE IF NOT EXISTS public.business_signups (
   billing_address TEXT NOT NULL,
   description TEXT,
 
-  -- Sponsoring add-on interest
+  -- Which tier the business is interested in (chosen in signup form).
+  -- Nullable + free text so "je ne sais pas encore" and future tiers work
+  -- without a migration; app-side we constrain to depart/croissance/domination/pas_sur.
+  tier TEXT,
+
+  -- Interest in Eve-suggested offer publications (15$/wk or 40$/mo per offer).
   interested_in_sponsoring BOOLEAN NOT NULL DEFAULT FALSE,
   sponsored_offer TEXT,
 
@@ -32,6 +37,10 @@ CREATE TABLE IF NOT EXISTS public.business_signups (
 
 COMMENT ON TABLE public.business_signups IS
   'Waitlist + onboarding requests from /business inscription form';
+
+-- Idempotent guard so re-running this migration adds the tier column if
+-- an older version of 001 was already executed.
+ALTER TABLE public.business_signups ADD COLUMN IF NOT EXISTS tier TEXT;
 
 -- ============================================================
 -- INDEXES

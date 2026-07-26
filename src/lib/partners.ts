@@ -154,53 +154,46 @@ export type ScoreSnapshotRow = {
 
 export type TierConfig = {
   label: string;
+  tagline: string;
   monthlyCents: number;
-  // Offer credits included per billing cycle. null = unlimited*.
-  offersIncluded: number | null;
-  // Cost of one additional offer past the included quota.
-  offerExtraCents: number;
-  // Included reservation-fee waivers per cycle. null = unlimited*.
-  reservationsIncluded: number | null;
-  // Cost per completed reservation past the included quota.
+  reservationsIncluded: number | null; // null = illimité
   reservationExtraCents: number;
-  // Cost per "En vedette" placement past the included quota.
-  featuredCents: number;
-  // Featured slots included per cycle (0 for most tiers).
-  featuredIncluded: number;
+  publishedOffersIncluded: number; // publications d'offre gratuites / mois
 };
 
 export const PARTNER_TIERS: Record<BusinessTier, TierConfig> = {
   depart: {
     label: "Départ",
+    tagline: "Tu testes Eve",
     monthlyCents: 1000,
-    offersIncluded: 0,
-    offerExtraCents: 1500,
     reservationsIncluded: 0,
     reservationExtraCents: 200,
-    featuredCents: 3500,
-    featuredIncluded: 0,
+    publishedOffersIncluded: 0,
   },
   croissance: {
     label: "Croissance",
+    tagline: "Le forfait de la plupart des partenaires",
     monthlyCents: 9900,
-    offersIncluded: 4,
-    offerExtraCents: 1000,
     reservationsIncluded: 100,
     reservationExtraCents: 200,
-    featuredCents: 2500,
-    featuredIncluded: 0,
+    publishedOffersIncluded: 0,
   },
   domination: {
     label: "Domination",
-    monthlyCents: 19900,
-    offersIncluded: null,
-    offerExtraCents: 0,
+    tagline: "Volume élevé + offres incluses",
+    monthlyCents: 29900,
     reservationsIncluded: null,
     reservationExtraCents: 0,
-    featuredCents: 2500,
-    featuredIncluded: 1,
+    publishedOffersIncluded: 2,
   },
 };
+
+// Publication d'une offre suggérée par Eve — prix uniforme entre les tiers.
+// Domination inclut 2 publications/mois gratuites (voir publishedOffersIncluded).
+export const OFFER_PUBLICATION = {
+  weeklyCents: 1500,
+  monthlyCents: 4000,
+} as const;
 
 // ---------------------------------------------------------------------------
 // Eve Score (§3 of spec)

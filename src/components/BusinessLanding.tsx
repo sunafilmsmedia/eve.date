@@ -17,8 +17,56 @@ const HOW_IT_WORKS = [
   },
   {
     icon: "3",
-    title: "Tu verses 1–3 $ à Eve",
-    desc: "Frais fixe par réservation confirmée. Facturé mensuellement en fin de mois. Aucun pourcentage, aucune commission cachée.",
+    title: "Tu payes selon ton forfait",
+    desc: "Départ = 2 $ par réservation. Croissance = 100 réservations incluses. Domination = illimité. Aucun pourcentage, aucune commission cachée.",
+  },
+];
+
+const TIERS = [
+  {
+    key: "depart",
+    label: "Départ",
+    tagline: "Tu testes Eve",
+    price: "$10",
+    period: "/mois",
+    features: [
+      "+ 2 $ par réservation confirmée",
+      "Fiche business dans les recommandations",
+      "Accès au tableau de bord",
+      "Aucun engagement — annule quand tu veux",
+    ],
+    cta: "Commencer avec Départ",
+    highlighted: false,
+  },
+  {
+    key: "croissance",
+    label: "Croissance",
+    tagline: "Le choix de la plupart des partenaires",
+    price: "$99",
+    period: "/mois",
+    features: [
+      "100 réservations incluses / mois",
+      "+ 2 $ par réservation au-delà de 100",
+      "Priorité dans les recommandations",
+      "Stats de performance détaillées",
+    ],
+    cta: "Choisir Croissance",
+    highlighted: true,
+  },
+  {
+    key: "domination",
+    label: "Domination",
+    tagline: "Volume élevé + offres incluses",
+    price: "$299",
+    period: "/mois",
+    features: [
+      "Réservations illimitées",
+      "2 publications d'offre gratuites / mois",
+      "Placement prioritaire toute l'année",
+      "Support dédié",
+    ],
+    cta: "Passer à Domination",
+    highlighted: false,
   },
 ];
 
@@ -49,31 +97,31 @@ const ADVANTAGES = [
   },
 ];
 
-const SPONSOR_EXAMPLES = [
-  "2 pour 1 sur les cocktails",
-  "Verre offert à la réservation",
-  "Dessert gratuit pour 2",
-  "20 % sur le menu dégustation",
-  "Surclassement gratuit en spa",
-  "Activité bonus offerte",
+const EVE_OFFER_EXAMPLES = [
+  "2 pour 1 sur les cocktails mardi et mercredi",
+  "Menu dégustation à -20 % le dimanche soir",
+  "Bouteille offerte pour 4 personnes+",
+  "Massage 90 min au prix du 60 min",
+  "Dessert offert avec 2 plats principaux",
+  "Formule brunch 2 pour 1 en semaine",
 ];
 
 const FAQ = [
   {
-    q: "Combien ça coûte au total ?",
-    a: "10 $/mois (ou 78 $/an) pour ton abonnement, plus 1-3 $ par réservation confirmée. Aucun frais de paiement, aucun pourcentage. Le sponsoring d'offre spéciale est optionnel (40 $/mois en plus).",
+    q: "Quels sont les 3 forfaits ?",
+    a: "Départ (10 $/mois + 2 $ par réservation) pour tester Eve. Croissance (99 $/mois avec 100 réservations incluses) pour la plupart des partenaires. Domination (299 $/mois, réservations illimitées + 2 publications d'offres gratuites) pour les gros volumes.",
   },
   {
-    q: "Comment fonctionne le sponsoring d'offre ?",
-    a: "Tu crées une offre spéciale (2 pour 1, dessert offert, % de réduction, etc.) et tu paies 40 $/mois supplémentaires. Cette offre est mise en avant auprès des membres Édén : visibilité prioritaire dans les recommandations, badge spécial, mention dans le chat avec Eve.",
+    q: "C'est quoi une « offre » et comment Eve me la suggère ?",
+    a: "Eve analyse ton menu, tes services et ton historique pour te proposer des offres qui vont attirer plus de clients (ex : « 2 pour 1 cocktails les mardis », « menu dégustation à -20 % le dimanche »). Tu approuves ou tu passes. Tu ne paies rien tant que tu ne publies pas.",
   },
   {
-    q: "Quelles offres sont autorisées au sponsoring ?",
-    a: "Tout ce qui apporte une vraie valeur ajoutée : promo limitée, item bonus, surclassement, % de réduction, expérience exclusive. Eve approuve chaque offre avant publication pour éviter les pièges marketing.",
+    q: "Combien coûte la mise en ligne d'une offre ?",
+    a: "15 $/semaine ou 40 $/mois par offre publiée, peu importe ton forfait. Domination inclut 2 publications gratuites par mois. Tu peux modifier ou retirer l'offre à tout moment.",
   },
   {
     q: "Comment je reçois mon argent ?",
-    a: "Tu encaisses directement les paiements chez toi, à ton tarif normal. Eve ne traite aucune transaction client. Tu verses les frais à Eve à la fin de chaque mois.",
+    a: "Tu encaisses directement les paiements chez toi, à ton tarif normal. Eve ne traite aucune transaction client. Tu es facturé pour ton forfait + réservations + publications d'offres à la fin de chaque mois.",
   },
   {
     q: "Que se passe-t-il si un client annule ?",
@@ -81,7 +129,7 @@ const FAQ = [
   },
   {
     q: "Et si moi j'annule une réservation ?",
-    a: "Tu verses 3 $ à Eve pour couvrir l'expérience perdue du client. C'est dissuasif — l'idée est de protéger l'utilisateur.",
+    a: "Tu verses 3 $ de crédit au client via Eve pour couvrir sa soirée gâchée. C'est dissuasif — l'idée est de protéger l'utilisateur.",
   },
   {
     q: "Comment mes prix sont affichés ?",
@@ -89,11 +137,11 @@ const FAQ = [
   },
   {
     q: "Combien de temps pour être en ligne ?",
-    a: "La vérification prend 24 à 48 heures ouvrables après réception des documents. Tu apparais ensuite dans les recommandations Eve en moins de 24h.",
+    a: "La vérification prend 24 à 48 heures ouvrables après réception des documents. Tu apparais ensuite dans les recommandations Eve en moins de 24 h.",
   },
   {
     q: "Y a-t-il un engagement minimum ?",
-    a: "Non. Tu peux annuler ton abonnement mensuel en tout temps. Les réservations confirmées sont honorées même après annulation.",
+    a: "Non. Tu peux annuler ton abonnement mensuel en tout temps, ou changer de forfait à la hausse ou à la baisse. Les réservations confirmées sont honorées même après annulation.",
   },
   {
     q: "Eve garantit-il un nombre de réservations ?",
@@ -133,6 +181,7 @@ export function BusinessLanding() {
       tax_number: String(fd.get("taxNumber") ?? "").trim(),
       billing_address: String(fd.get("billingAddress") ?? "").trim(),
       description: String(fd.get("description") ?? "").trim() || undefined,
+      tier: String(fd.get("tier") ?? "").trim() || undefined,
       interested_in_sponsoring: fd.get("interestedInSponsoring") === "on",
       sponsored_offer:
         String(fd.get("sponsoredOffer") ?? "").trim() || undefined,
@@ -205,98 +254,187 @@ export function BusinessLanding() {
             quoi faire
           </h1>
           <p className="text-[12px] sm:text-[14px] tracking-[0.16em] text-muted mt-8 mb-10 leading-[1.85] max-w-[640px] mx-auto normal-case">
-            Eve oriente couples, amis et groupes vers ton commerce selon leur budget, leur ville, leur ambiance recherchée. Tu paies un petit forfait + 1-3 $ par réservation. C&apos;est tout.
+            Eve oriente couples, amis et groupes vers ton commerce selon leur budget, leur ville, leur ambiance recherchée. 3 forfaits — dès 10 $/mois. Aucun pourcentage sur tes ventes.
           </p>
-          <a
-            href="#inscription"
-            className="inline-block bg-rose text-white px-9 py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all"
-          >
-            Réserver ma place →
-          </a>
-        </div>
-      </section>
-
-      {/* Pricing block */}
-      <section className="px-6 py-[80px]">
-        <div className="max-w-[1000px] mx-auto">
-          <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
-            Tarification
-          </p>
-          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-12 text-center leading-[1.2]">
-            Simple, fixe,{" "}
-            <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
-              prévisible
-            </Script>
-          </h2>
-
-          <div className="bg-charcoal rounded-[28px] p-10 sm:p-14 relative overflow-hidden">
-            <div
-              className="absolute inset-0 opacity-30"
-              style={{
-                background:
-                  "radial-gradient(circle at 80% 20%, rgba(201, 169, 110, 0.4) 0%, transparent 50%)",
-              }}
-            />
-            <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10">
-              <div>
-                <p className="text-[10px] font-bold tracking-[0.32em] text-gold mb-4">
-                  Abonnement business
-                </p>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-[64px] font-extrabold text-cream leading-none">
-                    $10
-                  </span>
-                  <span className="text-[14px] font-semibold tracking-[0.1em] text-cream/60">
-                    /mois
-                  </span>
-                </div>
-                <p className="text-[10px] font-semibold tracking-[0.18em] text-gold mb-4">
-                  ou $78/an · économise 42 $
-                </p>
-                <p className="text-[10px] tracking-[0.16em] text-cream/60 leading-[1.8]">
-                  Pour activer ton compte, gérer tes services et apparaître dans les recommandations Eve.
-                </p>
-              </div>
-              <div>
-                <p className="text-[10px] font-bold tracking-[0.32em] text-gold mb-4">
-                  Par réservation
-                </p>
-                <div className="flex items-baseline gap-2 mb-3">
-                  <span className="text-[64px] font-extrabold text-cream leading-none">
-                    $1–3
-                  </span>
-                  <span className="font-script text-[28px] text-gold leading-none">
-                    fixe
-                  </span>
-                </div>
-                <p className="text-[10px] tracking-[0.16em] text-cream/60 leading-[1.8]">
-                  Frais fixe par réservation confirmée. Facturé en fin de mois.
-                </p>
-              </div>
-            </div>
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <a
+              href="#forfaits"
+              className="inline-block bg-rose text-white px-8 py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all"
+            >
+              Voir les forfaits →
+            </a>
+            <a
+              href="#inscription"
+              className="inline-block bg-transparent text-charcoal border-2 border-charcoal/20 px-8 py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:border-rose hover:text-rose transition-all"
+            >
+              S&apos;inscrire
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Sponsor option */}
-      <section className="px-6 py-[80px] bg-gradient-to-b from-cream to-warm-white">
-        <div className="max-w-[1000px] mx-auto">
+      {/* Pricing — 3 tiers */}
+      <section id="forfaits" className="px-6 py-[80px]">
+        <div className="max-w-[1200px] mx-auto">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
-            Option · Sponsoring
+            Nos forfaits
           </p>
-          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-3 text-center leading-[1.2]">
-            Booste une{" "}
+          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-4 text-center leading-[1.2]">
+            Choisis ton{" "}
             <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
-              offre spéciale
+              forfait
             </Script>
           </h2>
-          <p className="text-center text-[11px] tracking-[0.14em] text-muted mb-12 leading-[1.85] max-w-[640px] mx-auto normal-case">
-            Tu as une offre attractive ? Sponsorise-la pour qu&apos;elle soit mise en avant auprès des membres Édén — ceux qui réservent le plus.
+          <p className="text-center text-[11px] tracking-[0.14em] text-muted mb-14 leading-[1.85] max-w-[620px] mx-auto normal-case">
+            Tu changes de forfait à la hausse ou à la baisse en un clic. Aucun engagement.
           </p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr,1fr] gap-6">
-            {/* Left: Pricing card */}
-            <div className="bg-gradient-to-br from-charcoal to-[#2a221d] rounded-[28px] p-9 sm:p-12 relative overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
+            {TIERS.map((tier) => {
+              const highlighted = tier.highlighted;
+              return (
+                <div
+                  key={tier.key}
+                  className={`relative rounded-[24px] p-8 sm:p-9 flex flex-col ${
+                    highlighted
+                      ? "bg-gradient-to-br from-charcoal to-[#2a221d] text-cream md:-translate-y-3 shadow-2xl"
+                      : "bg-warm-white border border-rose/15 text-charcoal"
+                  }`}
+                >
+                  {highlighted && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold text-charcoal text-[9px] font-bold tracking-[0.22em] uppercase px-4 py-1.5 rounded-full whitespace-nowrap">
+                      ★ Populaire
+                    </div>
+                  )}
+                  <p
+                    className={`text-[10px] font-bold tracking-[0.32em] mb-2 ${
+                      highlighted ? "text-gold" : "text-rose"
+                    }`}
+                  >
+                    {tier.label}
+                  </p>
+                  <p
+                    className={`text-[10px] tracking-[0.12em] mb-6 leading-[1.5] normal-case ${
+                      highlighted ? "text-cream/70" : "text-muted"
+                    }`}
+                  >
+                    {tier.tagline}
+                  </p>
+                  <div className="flex items-baseline gap-1.5 mb-8">
+                    <span
+                      className={`text-[54px] font-extrabold leading-none ${
+                        highlighted ? "text-cream" : "text-charcoal"
+                      }`}
+                    >
+                      {tier.price}
+                    </span>
+                    <span
+                      className={`text-[13px] font-semibold tracking-[0.1em] ${
+                        highlighted ? "text-cream/60" : "text-muted"
+                      }`}
+                    >
+                      {tier.period}
+                    </span>
+                  </div>
+                  <ul className="list-none space-y-3 mb-8 flex-1">
+                    {tier.features.map((f) => (
+                      <li
+                        key={f}
+                        className={`flex items-start gap-3 text-[10.5px] tracking-[0.08em] leading-[1.6] normal-case ${
+                          highlighted ? "text-cream/90" : "text-charcoal/85"
+                        }`}
+                      >
+                        <span
+                          className={`shrink-0 mt-0.5 font-bold ${
+                            highlighted ? "text-gold" : "text-rose"
+                          }`}
+                        >
+                          ✓
+                        </span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href="#inscription"
+                    className={`block text-center py-3.5 rounded-full text-[10px] font-bold tracking-[0.22em] transition-all ${
+                      highlighted
+                        ? "bg-gold text-charcoal hover:bg-cream"
+                        : "bg-rose text-white hover:bg-deep-rose"
+                    }`}
+                  >
+                    {tier.cta} →
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="text-center text-[10px] tracking-[0.14em] text-muted mt-10 leading-[1.85] max-w-[720px] mx-auto normal-case">
+            Facturation en fin de mois. Tu encaisses les paiements clients directement — Eve ne prend jamais de pourcentage sur les ventes.
+          </p>
+        </div>
+      </section>
+
+      {/* Eve suggests offers based on your menu */}
+      <section className="px-6 py-[80px] bg-gradient-to-b from-cream to-warm-white">
+        <div className="max-w-[1100px] mx-auto">
+          <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
+            Bonus · Offres suggérées par Eve AI
+          </p>
+          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-3 text-center leading-[1.2]">
+            Eve analyse ton menu et te propose des{" "}
+            <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
+              offres qui marchent
+            </Script>
+          </h2>
+          <p className="text-center text-[11px] tracking-[0.14em] text-muted mb-12 leading-[1.85] max-w-[680px] mx-auto normal-case">
+            Tu approuves les suggestions qui t&apos;intéressent. Tu ne paies rien tant que tu ne publies pas.
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr,1fr] gap-6 items-stretch">
+            {/* Left: How it works — 3 steps */}
+            <div className="bg-warm-white border border-rose/15 rounded-[28px] p-7 sm:p-9">
+              <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-6">
+                Comment ça marche
+              </p>
+              <ol className="list-none space-y-5">
+                {[
+                  {
+                    n: "1",
+                    t: "Tu uploades ton menu / liste de services",
+                    d: "PDF ou photo. Eve extrait automatiquement plats, prix et créneaux.",
+                  },
+                  {
+                    n: "2",
+                    t: "Eve te propose des offres personnalisées",
+                    d: "Basées sur tes prix, tes créneaux creux, et ce qui marche déjà dans ta zone.",
+                  },
+                  {
+                    n: "3",
+                    t: "Tu approuves et tu publies",
+                    d: "15 $/semaine ou 40 $/mois par offre publiée. Modifiable et retirable à tout moment.",
+                  },
+                ].map((step) => (
+                  <li key={step.n} className="flex items-start gap-4">
+                    <span className="w-8 h-8 rounded-full bg-rose text-white flex items-center justify-center text-[13px] font-extrabold shrink-0">
+                      {step.n}
+                    </span>
+                    <div>
+                      <p className="text-[12px] font-bold tracking-[0.08em] text-charcoal leading-[1.4] mb-1.5 normal-case">
+                        {step.t}
+                      </p>
+                      <p className="text-[10px] tracking-[0.1em] text-muted leading-[1.7] normal-case">
+                        {step.d}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            {/* Right: Pricing card */}
+            <div className="bg-gradient-to-br from-charcoal to-[#2a221d] rounded-[28px] p-8 sm:p-10 relative overflow-hidden flex flex-col">
               <div
                 className="absolute inset-0 opacity-35"
                 style={{
@@ -304,64 +442,58 @@ export function BusinessLanding() {
                     "radial-gradient(circle at 80% 30%, rgba(201, 169, 110, 0.5) 0%, transparent 55%)",
                 }}
               />
-              <div className="relative">
-                <div className="inline-block bg-gold/20 text-gold text-[9px] font-bold tracking-[0.22em] px-3 py-1.5 rounded-full mb-5">
-                  Add-on
-                </div>
-                <p className="text-[10px] font-bold tracking-[0.32em] text-gold mb-3">
-                  Sponsoring d&apos;offre
+              <div className="relative flex-1 flex flex-col">
+                <p className="text-[10px] font-bold tracking-[0.32em] text-gold mb-6">
+                  Publier une offre
                 </p>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-[64px] font-extrabold text-cream leading-none">
-                    $40
-                  </span>
-                  <span className="text-[14px] font-semibold tracking-[0.1em] text-cream/60">
-                    /mois
-                  </span>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
+                    <p className="text-[9px] font-bold tracking-[0.22em] text-cream/60 mb-2">
+                      Semaine
+                    </p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-[36px] font-extrabold text-cream leading-none">
+                        $15
+                      </span>
+                      <span className="text-[11px] tracking-[0.1em] text-cream/60">
+                        /sem
+                      </span>
+                    </div>
+                  </div>
+                  <div className="bg-gold/15 border border-gold/30 rounded-2xl p-5">
+                    <p className="text-[9px] font-bold tracking-[0.22em] text-gold mb-2">
+                      Mois
+                    </p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-[36px] font-extrabold text-cream leading-none">
+                        $40
+                      </span>
+                      <span className="text-[11px] tracking-[0.1em] text-cream/60">
+                        /mois
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-[10px] font-semibold tracking-[0.18em] text-gold mb-6">
-                  En plus de ton abonnement business
+                <p className="text-[10px] tracking-[0.14em] text-cream/70 leading-[1.75] mb-5 normal-case">
+                  Par offre publiée, peu importe ton forfait. Le forfait <b className="text-gold">Domination</b> inclut <b className="text-gold">2 publications gratuites/mois</b>.
                 </p>
-
-                <ul className="list-none space-y-3 mb-2">
-                  {[
-                    "Visibilité prioritaire dans les recommandations Édén",
-                    "Badge spécial sur ta fiche",
-                    "Mention par Eve dans le chat quand pertinent",
-                    "Notification push aux membres ciblés",
-                    "1 offre active à la fois — modifiable à volonté",
-                  ].map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-3 text-[10px] font-medium tracking-[0.1em] text-cream/85 leading-[1.7] normal-case"
-                    >
-                      <span className="text-gold font-bold flex-shrink-0 mt-0.5">✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+                <div className="bg-white/5 rounded-xl p-4 mt-auto">
+                  <p className="text-[9px] font-bold tracking-[0.22em] text-cream/50 mb-3">
+                    Exemples d&apos;offres proposées
+                  </p>
+                  <ul className="list-none space-y-2">
+                    {EVE_OFFER_EXAMPLES.slice(0, 3).map((ex) => (
+                      <li
+                        key={ex}
+                        className="text-[10px] tracking-[0.06em] text-cream/85 leading-[1.6] normal-case flex items-start gap-2"
+                      >
+                        <span className="text-gold shrink-0 mt-0.5">→</span>
+                        {ex}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-            </div>
-
-            {/* Right: Examples */}
-            <div className="bg-warm-white border border-rose/15 rounded-[28px] p-7 sm:p-9">
-              <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5">
-                Exemples d&apos;offres
-              </p>
-              <ul className="list-none space-y-3.5 mb-6">
-                {SPONSOR_EXAMPLES.map((ex) => (
-                  <li
-                    key={ex}
-                    className="flex items-start gap-3 text-[11px] tracking-[0.08em] text-charcoal leading-[1.7] normal-case"
-                  >
-                    <span className="text-rose font-bold shrink-0 mt-0.5">→</span>
-                    {ex}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-[9px] tracking-[0.16em] text-muted leading-[1.8] pt-5 border-t border-rose/10 normal-case">
-                Chaque offre est validée par Eve avant publication pour garantir une vraie valeur ajoutée aux membres.
-              </p>
             </div>
           </div>
         </div>
@@ -589,6 +721,23 @@ export function BusinessLanding() {
                 />
               </FormField>
 
+              <FormField label="Forfait qui t'intéresse *">
+                <select
+                  name="tier"
+                  required
+                  defaultValue=""
+                  className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors"
+                >
+                  <option value="" disabled>
+                    Choisis un forfait
+                  </option>
+                  <option value="depart">Départ — 10 $/mois + 2 $/réservation</option>
+                  <option value="croissance">Croissance — 99 $/mois (100 résas incluses)</option>
+                  <option value="domination">Domination — 299 $/mois (illimité + 2 offres)</option>
+                  <option value="pas_sur">Je ne sais pas encore</option>
+                </select>
+              </FormField>
+
               <div className="bg-light-gold/30 border border-gold/30 rounded-[16px] p-5">
                 <label className="flex items-start gap-3 cursor-pointer mb-4">
                   <input
@@ -597,14 +746,14 @@ export function BusinessLanding() {
                     className="mt-1 w-4 h-4 accent-rose cursor-pointer"
                   />
                   <span className="text-[11px] font-bold tracking-[0.12em] text-charcoal leading-[1.5] normal-case">
-                    Je suis intéressé·e par le sponsoring d&apos;offre spéciale (40 $/mois en plus)
+                    Je veux qu&apos;Eve me suggère des offres à publier (15 $/sem ou 40 $/mois par offre)
                   </span>
                 </label>
-                <FormField label="Offre que tu voudrais sponsoriser" hint="(optionnel)">
+                <FormField label="Une offre à laquelle tu penses déjà" hint="(optionnel)">
                   <textarea
                     name="sponsoredOffer"
                     rows={2}
-                    placeholder="Ex : 2 pour 1 sur les cocktails, dessert offert, 20 % sur menu dégustation..."
+                    placeholder="Ex : 2 pour 1 sur les cocktails, menu dégustation -20 %, dessert offert..."
                     className="w-full px-5 py-3 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40 resize-none"
                   />
                 </FormField>

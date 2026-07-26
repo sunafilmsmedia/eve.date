@@ -9,9 +9,12 @@ type Payload = {
   tax_number?: string;
   billing_address?: string;
   description?: string;
+  tier?: string;
   interested_in_sponsoring?: boolean;
   sponsored_offer?: string;
 };
+
+const ALLOWED_TIERS = new Set(["depart", "croissance", "domination", "pas_sur"]);
 
 const REQUIRED_FIELDS: (keyof Payload)[] = [
   "business_name",
@@ -64,6 +67,9 @@ export async function POST(req: Request) {
 
   const supabase = await createClient();
 
+  const tier = payload.tier?.trim();
+  const tierValue = tier && ALLOWED_TIERS.has(tier) ? tier : null;
+
   const { error } = await supabase.from("business_signups").insert({
     business_name: payload.business_name!.trim(),
     business_type: payload.business_type!.trim(),
@@ -73,6 +79,7 @@ export async function POST(req: Request) {
     tax_number: payload.tax_number!.trim(),
     billing_address: payload.billing_address!.trim(),
     description: payload.description?.trim() || null,
+    tier: tierValue,
     interested_in_sponsoring: payload.interested_in_sponsoring === true,
     sponsored_offer: payload.sponsored_offer?.trim() || null,
   });
