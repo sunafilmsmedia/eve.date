@@ -81,7 +81,7 @@ const ADVANTAGES = [
   },
   {
     title: "Frais clairs et prévisibles",
-    desc: "1 à 3 $ fixe par réservation. Tu sais combien tu dois exactement, sans calcul de pourcentage.",
+    desc: "Forfait fixe + 2 $ par réservation seulement. Tu sais combien tu dois exactement, sans calcul de pourcentage.",
   },
   {
     title: "Recommandations dans 4 contextes",
@@ -210,29 +210,39 @@ export function BusinessLanding() {
   };
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-charcoal text-cream">
+      {/* Ambient gold glow — subtle, persistent */}
+      <div
+        aria-hidden
+        className="fixed inset-0 pointer-events-none opacity-40 -z-10"
+        style={{
+          background:
+            "radial-gradient(circle at 20% 10%, rgba(201, 169, 110, 0.18) 0%, transparent 45%), radial-gradient(circle at 85% 90%, rgba(200, 114, 90, 0.14) 0%, transparent 40%)",
+        }}
+      />
+
       {/* Top nav */}
-      <nav className="px-6 py-5 border-b border-rose/10 bg-cream/85 backdrop-blur-md sticky top-0 z-40">
+      <nav className="px-6 py-5 border-b border-gold/15 bg-charcoal/85 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-[1100px] mx-auto flex items-center justify-between flex-wrap gap-4">
           <Link
             href="/"
-            className="inline-block font-script text-[32px] text-charcoal leading-none hover:text-rose transition-colors"
+            className="inline-block font-script text-[32px] text-cream leading-none hover:text-gold transition-colors"
           >
             Eve
-            <span className="font-sans text-[10px] font-bold text-rose tracking-[0.3em] uppercase align-middle ml-1.5">
+            <span className="font-sans text-[10px] font-bold text-gold tracking-[0.3em] uppercase align-middle ml-1.5">
               AI
             </span>
           </Link>
           <div className="flex items-center gap-5">
             <Link
               href="/"
-              className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors"
+              className="text-[10px] font-bold tracking-[0.18em] text-cream/60 hover:text-gold transition-colors"
             >
               ← Côté utilisateur
             </Link>
             <a
               href="#inscription"
-              className="bg-rose text-white px-5 py-2.5 rounded-full text-[10px] font-bold tracking-[0.22em] hover:bg-deep-rose transition-colors"
+              className="bg-gold text-charcoal px-5 py-2.5 rounded-full text-[10px] font-bold tracking-[0.22em] hover:bg-cream transition-colors"
             >
               S&apos;inscrire
             </a>
@@ -241,31 +251,38 @@ export function BusinessLanding() {
       </nav>
 
       {/* Hero */}
-      <section className="px-6 py-[100px] bg-gradient-to-b from-cream to-warm-white">
-        <div className="max-w-[860px] mx-auto text-center">
+      <section className="relative px-6 py-[110px] overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 40%, rgba(201, 169, 110, 0.22) 0%, transparent 55%)",
+          }}
+        />
+        <div className="max-w-[860px] mx-auto text-center relative">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5">
             Côté commerces
           </p>
-          <h1 className="font-sans text-[36px] sm:text-[52px] md:text-[64px] font-extrabold tracking-[0.01em] text-charcoal mb-3 leading-[1.1]">
+          <h1 className="font-sans text-[36px] sm:text-[52px] md:text-[64px] font-extrabold tracking-[0.01em] text-cream mb-3 leading-[1.1]">
             Fais-toi recommander aux gens qui{" "}
-            <Script className="text-rose text-[60px] sm:text-[84px] md:text-[104px] inline-block leading-[0.9]">
+            <Script className="text-gold text-[60px] sm:text-[84px] md:text-[104px] inline-block leading-[0.9]">
               cherchent
             </Script>{" "}
             quoi faire
           </h1>
-          <p className="text-[12px] sm:text-[14px] tracking-[0.16em] text-muted mt-8 mb-10 leading-[1.85] max-w-[640px] mx-auto normal-case">
+          <p className="text-[12px] sm:text-[14px] tracking-[0.16em] text-cream/65 mt-8 mb-10 leading-[1.85] max-w-[640px] mx-auto normal-case">
             Eve oriente couples, amis et groupes vers ton commerce selon leur budget, leur ville, leur ambiance recherchée. 3 forfaits — dès 10 $/mois. Aucun pourcentage sur tes ventes.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <a
               href="#forfaits"
-              className="inline-block bg-rose text-white px-8 py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all"
+              className="inline-block bg-gold text-charcoal px-8 py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-cream hover:-translate-y-0.5 transition-all"
             >
               Voir les forfaits →
             </a>
             <a
               href="#inscription"
-              className="inline-block bg-transparent text-charcoal border-2 border-charcoal/20 px-8 py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:border-rose hover:text-rose transition-all"
+              className="inline-block bg-transparent text-cream border-2 border-cream/25 px-8 py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:border-rose hover:text-rose transition-all"
             >
               S&apos;inscrire
             </a>
@@ -274,18 +291,18 @@ export function BusinessLanding() {
       </section>
 
       {/* Pricing — 3 tiers */}
-      <section id="forfaits" className="px-6 py-[80px]">
+      <section id="forfaits" className="px-6 py-[90px] border-t border-gold/10">
         <div className="max-w-[1200px] mx-auto">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
             Nos forfaits
           </p>
-          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-4 text-center leading-[1.2]">
+          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-cream mb-4 text-center leading-[1.2]">
             Choisis ton{" "}
-            <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
+            <Script className="text-gold text-[44px] sm:text-[56px] inline-block leading-[0.9]">
               forfait
             </Script>
           </h2>
-          <p className="text-center text-[11px] tracking-[0.14em] text-muted mb-14 leading-[1.85] max-w-[620px] mx-auto normal-case">
+          <p className="text-center text-[11px] tracking-[0.14em] text-cream/55 mb-14 leading-[1.85] max-w-[620px] mx-auto normal-case">
             Tu changes de forfait à la hausse ou à la baisse en un clic. Aucun engagement.
           </p>
 
@@ -295,172 +312,185 @@ export function BusinessLanding() {
               return (
                 <div
                   key={tier.key}
-                  className={`relative rounded-[24px] p-8 sm:p-9 flex flex-col ${
+                  className={`relative rounded-[24px] p-8 sm:p-9 flex flex-col overflow-hidden ${
                     highlighted
-                      ? "bg-gradient-to-br from-charcoal to-[#2a221d] text-cream md:-translate-y-3 shadow-2xl"
-                      : "bg-warm-white border border-rose/15 text-charcoal"
+                      ? "bg-gradient-to-br from-gold to-[#a88a52] text-charcoal md:-translate-y-3 shadow-[0_30px_60px_-25px_rgba(201,169,110,0.5)]"
+                      : "bg-[#221c17] border border-gold/15 text-cream"
                   }`}
                 >
+                  {!highlighted && (
+                    <div
+                      className="absolute inset-0 opacity-40 pointer-events-none"
+                      style={{
+                        background:
+                          "radial-gradient(circle at 80% 0%, rgba(201, 169, 110, 0.25) 0%, transparent 60%)",
+                      }}
+                    />
+                  )}
                   {highlighted && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold text-charcoal text-[9px] font-bold tracking-[0.22em] uppercase px-4 py-1.5 rounded-full whitespace-nowrap">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-charcoal text-gold text-[9px] font-bold tracking-[0.22em] uppercase px-4 py-1.5 rounded-full whitespace-nowrap border border-gold/40">
                       ★ Populaire
                     </div>
                   )}
-                  <p
-                    className={`text-[10px] font-bold tracking-[0.32em] mb-2 ${
-                      highlighted ? "text-gold" : "text-rose"
-                    }`}
-                  >
-                    {tier.label}
-                  </p>
-                  <p
-                    className={`text-[10px] tracking-[0.12em] mb-6 leading-[1.5] normal-case ${
-                      highlighted ? "text-cream/70" : "text-muted"
-                    }`}
-                  >
-                    {tier.tagline}
-                  </p>
-                  <div className="flex items-baseline gap-1.5 mb-8">
-                    <span
-                      className={`text-[54px] font-extrabold leading-none ${
-                        highlighted ? "text-cream" : "text-charcoal"
+                  <div className="relative flex flex-col flex-1">
+                    <p
+                      className={`text-[10px] font-bold tracking-[0.32em] mb-2 ${
+                        highlighted ? "text-charcoal" : "text-gold"
                       }`}
                     >
-                      {tier.price}
-                    </span>
-                    <span
-                      className={`text-[13px] font-semibold tracking-[0.1em] ${
-                        highlighted ? "text-cream/60" : "text-muted"
+                      {tier.label}
+                    </p>
+                    <p
+                      className={`text-[10px] tracking-[0.12em] mb-6 leading-[1.5] normal-case ${
+                        highlighted ? "text-charcoal/70" : "text-rose"
                       }`}
                     >
-                      {tier.period}
-                    </span>
-                  </div>
-                  <ul className="list-none space-y-3 mb-8 flex-1">
-                    {tier.features.map((f) => (
-                      <li
-                        key={f}
-                        className={`flex items-start gap-3 text-[10.5px] tracking-[0.08em] leading-[1.6] normal-case ${
-                          highlighted ? "text-cream/90" : "text-charcoal/85"
+                      {tier.tagline}
+                    </p>
+                    <div className="flex items-baseline gap-1.5 mb-8">
+                      <span
+                        className={`text-[54px] font-extrabold leading-none ${
+                          highlighted ? "text-charcoal" : "text-cream"
                         }`}
                       >
-                        <span
-                          className={`shrink-0 mt-0.5 font-bold ${
-                            highlighted ? "text-gold" : "text-rose"
+                        {tier.price}
+                      </span>
+                      <span
+                        className={`text-[13px] font-semibold tracking-[0.1em] ${
+                          highlighted ? "text-charcoal/70" : "text-cream/55"
+                        }`}
+                      >
+                        {tier.period}
+                      </span>
+                    </div>
+                    <ul className="list-none space-y-3 mb-8 flex-1">
+                      {tier.features.map((f) => (
+                        <li
+                          key={f}
+                          className={`flex items-start gap-3 text-[10.5px] tracking-[0.08em] leading-[1.6] normal-case ${
+                            highlighted ? "text-charcoal/85" : "text-cream/85"
                           }`}
                         >
-                          ✓
-                        </span>
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href="#inscription"
-                    className={`block text-center py-3.5 rounded-full text-[10px] font-bold tracking-[0.22em] transition-all ${
-                      highlighted
-                        ? "bg-gold text-charcoal hover:bg-cream"
-                        : "bg-rose text-white hover:bg-deep-rose"
-                    }`}
-                  >
-                    {tier.cta} →
-                  </a>
+                          <span
+                            className={`shrink-0 mt-0.5 font-bold ${
+                              highlighted ? "text-charcoal" : "text-gold"
+                            }`}
+                          >
+                            ✓
+                          </span>
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <a
+                      href="#inscription"
+                      className={`block text-center py-3.5 rounded-full text-[10px] font-bold tracking-[0.22em] transition-all ${
+                        highlighted
+                          ? "bg-charcoal text-gold hover:bg-black"
+                          : "bg-gold text-charcoal hover:bg-cream"
+                      }`}
+                    >
+                      {tier.cta} →
+                    </a>
+                  </div>
                 </div>
               );
             })}
           </div>
 
-          <p className="text-center text-[10px] tracking-[0.14em] text-muted mt-10 leading-[1.85] max-w-[720px] mx-auto normal-case">
+          <p className="text-center text-[10px] tracking-[0.14em] text-cream/50 mt-10 leading-[1.85] max-w-[720px] mx-auto normal-case">
             Facturation en fin de mois. Tu encaisses les paiements clients directement — Eve ne prend jamais de pourcentage sur les ventes.
           </p>
         </div>
       </section>
 
       {/* Eve suggests offers based on your menu */}
-      <section className="px-6 py-[80px] bg-gradient-to-b from-cream to-warm-white">
+      <section className="px-6 py-[90px] border-t border-gold/10">
         <div className="max-w-[1100px] mx-auto">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
             Bonus · Offres suggérées par Eve AI
           </p>
-          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-3 text-center leading-[1.2]">
+          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-cream mb-3 text-center leading-[1.2]">
             Eve analyse ton menu et te propose des{" "}
-            <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
+            <Script className="text-gold text-[44px] sm:text-[56px] inline-block leading-[0.9]">
               offres qui marchent
             </Script>
           </h2>
-          <p className="text-center text-[11px] tracking-[0.14em] text-muted mb-12 leading-[1.85] max-w-[680px] mx-auto normal-case">
+          <p className="text-center text-[11px] tracking-[0.14em] text-cream/55 mb-12 leading-[1.85] max-w-[680px] mx-auto normal-case">
             Tu approuves les suggestions qui t&apos;intéressent. Tu ne paies rien tant que tu ne publies pas.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.2fr,1fr] gap-6 items-stretch">
             {/* Left: How it works — 3 steps */}
-            <div className="bg-warm-white border border-rose/15 rounded-[28px] p-7 sm:p-9">
-              <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-6">
-                Comment ça marche
-              </p>
-              <ol className="list-none space-y-5">
-                {[
-                  {
-                    n: "1",
-                    t: "Tu uploades ton menu / liste de services",
-                    d: "PDF ou photo. Eve extrait automatiquement plats, prix et créneaux.",
-                  },
-                  {
-                    n: "2",
-                    t: "Eve te propose des offres personnalisées",
-                    d: "Basées sur tes prix, tes créneaux creux, et ce qui marche déjà dans ta zone.",
-                  },
-                  {
-                    n: "3",
-                    t: "Tu approuves et tu publies",
-                    d: "15 $/semaine ou 40 $/mois par offre publiée. Modifiable et retirable à tout moment.",
-                  },
-                ].map((step) => (
-                  <li key={step.n} className="flex items-start gap-4">
-                    <span className="w-8 h-8 rounded-full bg-rose text-white flex items-center justify-center text-[13px] font-extrabold shrink-0">
-                      {step.n}
-                    </span>
-                    <div>
-                      <p className="text-[12px] font-bold tracking-[0.08em] text-charcoal leading-[1.4] mb-1.5 normal-case">
-                        {step.t}
-                      </p>
-                      <p className="text-[10px] tracking-[0.1em] text-muted leading-[1.7] normal-case">
-                        {step.d}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
+            <div className="bg-[#221c17] border border-gold/15 rounded-[28px] p-7 sm:p-9 relative overflow-hidden">
+              <div
+                className="absolute inset-0 opacity-30 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle at 100% 0%, rgba(200, 114, 90, 0.35) 0%, transparent 55%)",
+                }}
+              />
+              <div className="relative">
+                <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-6">
+                  Comment ça marche
+                </p>
+                <ol className="list-none space-y-5">
+                  {[
+                    {
+                      n: "1",
+                      t: "Tu uploades ton menu / liste de services",
+                      d: "PDF ou photo. Eve extrait automatiquement plats, prix et créneaux.",
+                    },
+                    {
+                      n: "2",
+                      t: "Eve te propose des offres personnalisées",
+                      d: "Basées sur tes prix, tes créneaux creux, et ce qui marche déjà dans ta zone.",
+                    },
+                    {
+                      n: "3",
+                      t: "Tu approuves et tu publies",
+                      d: "15 $/semaine ou 40 $/mois par offre publiée. Modifiable et retirable à tout moment.",
+                    },
+                  ].map((step) => (
+                    <li key={step.n} className="flex items-start gap-4">
+                      <span className="w-8 h-8 rounded-full bg-gold text-charcoal flex items-center justify-center text-[13px] font-extrabold shrink-0">
+                        {step.n}
+                      </span>
+                      <div>
+                        <p className="text-[12px] font-bold tracking-[0.08em] text-cream leading-[1.4] mb-1.5 normal-case">
+                          {step.t}
+                        </p>
+                        <p className="text-[10px] tracking-[0.1em] text-cream/60 leading-[1.7] normal-case">
+                          {step.d}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </div>
 
             {/* Right: Pricing card */}
-            <div className="bg-gradient-to-br from-charcoal to-[#2a221d] rounded-[28px] p-8 sm:p-10 relative overflow-hidden flex flex-col">
-              <div
-                className="absolute inset-0 opacity-35"
-                style={{
-                  background:
-                    "radial-gradient(circle at 80% 30%, rgba(201, 169, 110, 0.5) 0%, transparent 55%)",
-                }}
-              />
-              <div className="relative flex-1 flex flex-col">
-                <p className="text-[10px] font-bold tracking-[0.32em] text-gold mb-6">
+            <div className="bg-gradient-to-br from-gold to-[#a88a52] rounded-[28px] p-8 sm:p-10 relative overflow-hidden flex flex-col shadow-[0_30px_60px_-25px_rgba(201,169,110,0.5)]">
+              <div className="relative flex-1 flex flex-col text-charcoal">
+                <p className="text-[10px] font-bold tracking-[0.32em] text-charcoal/70 mb-6">
                   Publier une offre
                 </p>
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-                    <p className="text-[9px] font-bold tracking-[0.22em] text-cream/60 mb-2">
+                  <div className="bg-charcoal/10 border border-charcoal/15 rounded-2xl p-5">
+                    <p className="text-[9px] font-bold tracking-[0.22em] text-charcoal/60 mb-2">
                       Semaine
                     </p>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-[36px] font-extrabold text-cream leading-none">
+                      <span className="text-[36px] font-extrabold text-charcoal leading-none">
                         $15
                       </span>
-                      <span className="text-[11px] tracking-[0.1em] text-cream/60">
+                      <span className="text-[11px] tracking-[0.1em] text-charcoal/60">
                         /sem
                       </span>
                     </div>
                   </div>
-                  <div className="bg-gold/15 border border-gold/30 rounded-2xl p-5">
+                  <div className="bg-charcoal border border-charcoal rounded-2xl p-5">
                     <p className="text-[9px] font-bold tracking-[0.22em] text-gold mb-2">
                       Mois
                     </p>
@@ -474,20 +504,20 @@ export function BusinessLanding() {
                     </div>
                   </div>
                 </div>
-                <p className="text-[10px] tracking-[0.14em] text-cream/70 leading-[1.75] mb-5 normal-case">
-                  Par offre publiée, peu importe ton forfait. Le forfait <b className="text-gold">Domination</b> inclut <b className="text-gold">2 publications gratuites/mois</b>.
+                <p className="text-[10px] tracking-[0.14em] text-charcoal/75 leading-[1.75] mb-5 normal-case">
+                  Par offre publiée, peu importe ton forfait. Le forfait <b className="text-charcoal">Domination</b> inclut <b className="text-charcoal">2 publications gratuites/mois</b>.
                 </p>
-                <div className="bg-white/5 rounded-xl p-4 mt-auto">
-                  <p className="text-[9px] font-bold tracking-[0.22em] text-cream/50 mb-3">
+                <div className="bg-charcoal/10 rounded-xl p-4 mt-auto">
+                  <p className="text-[9px] font-bold tracking-[0.22em] text-charcoal/50 mb-3">
                     Exemples d&apos;offres proposées
                   </p>
                   <ul className="list-none space-y-2">
                     {EVE_OFFER_EXAMPLES.slice(0, 3).map((ex) => (
                       <li
                         key={ex}
-                        className="text-[10px] tracking-[0.06em] text-cream/85 leading-[1.6] normal-case flex items-start gap-2"
+                        className="text-[10px] tracking-[0.06em] text-charcoal/85 leading-[1.6] normal-case flex items-start gap-2"
                       >
-                        <span className="text-gold shrink-0 mt-0.5">→</span>
+                        <span className="text-rose shrink-0 mt-0.5">→</span>
                         {ex}
                       </li>
                     ))}
@@ -500,14 +530,14 @@ export function BusinessLanding() {
       </section>
 
       {/* How it works */}
-      <section className="px-6 py-[80px] bg-warm-white">
+      <section className="px-6 py-[90px] border-t border-gold/10">
         <div className="max-w-[1000px] mx-auto">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
             Comment ça marche
           </p>
-          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-12 text-center leading-[1.2]">
+          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-cream mb-12 text-center leading-[1.2]">
             Trois{" "}
-            <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
+            <Script className="text-gold text-[44px] sm:text-[56px] inline-block leading-[0.9]">
               étapes
             </Script>
           </h2>
@@ -515,17 +545,26 @@ export function BusinessLanding() {
             {HOW_IT_WORKS.map((step) => (
               <div
                 key={step.title}
-                className="bg-cream border border-rose/15 rounded-[20px] p-7"
+                className="bg-[#221c17] border border-gold/15 rounded-[20px] p-7 relative overflow-hidden"
               >
-                <div className="w-10 h-10 rounded-full bg-rose text-white flex items-center justify-center font-extrabold text-[16px] mb-5">
-                  {step.icon}
+                <div
+                  className="absolute inset-0 opacity-25 pointer-events-none"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 100% 0%, rgba(201, 169, 110, 0.4) 0%, transparent 55%)",
+                  }}
+                />
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-full bg-gold text-charcoal flex items-center justify-center font-extrabold text-[16px] mb-5">
+                    {step.icon}
+                  </div>
+                  <h3 className="text-[12px] font-bold tracking-[0.14em] text-cream mb-3 leading-[1.4]">
+                    {step.title}
+                  </h3>
+                  <p className="text-[10px] tracking-[0.1em] text-cream/60 leading-[1.85] normal-case">
+                    {step.desc}
+                  </p>
                 </div>
-                <h3 className="text-[12px] font-bold tracking-[0.14em] text-charcoal mb-3 leading-[1.4]">
-                  {step.title}
-                </h3>
-                <p className="text-[10px] tracking-[0.1em] text-muted leading-[1.85] normal-case">
-                  {step.desc}
-                </p>
               </div>
             ))}
           </div>
@@ -533,14 +572,14 @@ export function BusinessLanding() {
       </section>
 
       {/* Advantages */}
-      <section className="px-6 py-[80px]">
+      <section className="px-6 py-[90px] border-t border-gold/10">
         <div className="max-w-[1000px] mx-auto">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
             Avantages
           </p>
-          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-12 text-center leading-[1.2]">
+          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-cream mb-12 text-center leading-[1.2]">
             Ce que tu{" "}
-            <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
+            <Script className="text-gold text-[44px] sm:text-[56px] inline-block leading-[0.9]">
               gagnes
             </Script>
           </h2>
@@ -548,12 +587,13 @@ export function BusinessLanding() {
             {ADVANTAGES.map((adv) => (
               <div
                 key={adv.title}
-                className="bg-warm-white border border-rose/15 rounded-[20px] p-7"
+                className="bg-[#221c17] border border-gold/15 rounded-[20px] p-7"
               >
-                <h3 className="text-[12px] font-bold tracking-[0.14em] text-charcoal mb-3">
-                  ✓ {adv.title}
+                <h3 className="text-[12px] font-bold tracking-[0.14em] text-cream mb-3">
+                  <span className="text-gold mr-2">✓</span>
+                  {adv.title}
                 </h3>
-                <p className="text-[10px] tracking-[0.1em] text-muted leading-[1.8] normal-case">
+                <p className="text-[10px] tracking-[0.1em] text-cream/60 leading-[1.8] normal-case">
                   {adv.desc}
                 </p>
               </div>
@@ -563,14 +603,14 @@ export function BusinessLanding() {
       </section>
 
       {/* FAQ */}
-      <section className="px-6 py-[80px] bg-warm-white">
+      <section className="px-6 py-[90px] border-t border-gold/10">
         <div className="max-w-[820px] mx-auto">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
             Questions fréquentes
           </p>
-          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-12 text-center leading-[1.2]">
+          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-cream mb-12 text-center leading-[1.2]">
             On répond à{" "}
-            <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
+            <Script className="text-gold text-[44px] sm:text-[56px] inline-block leading-[0.9]">
               tout
             </Script>
           </h2>
@@ -578,17 +618,17 @@ export function BusinessLanding() {
             {FAQ.map((item) => (
               <details
                 key={item.q}
-                className="group bg-cream border border-rose/15 rounded-[18px] overflow-hidden"
+                className="group bg-[#221c17] border border-gold/15 rounded-[18px] overflow-hidden hover:border-gold/30 transition-colors"
               >
                 <summary className="cursor-pointer px-6 py-5 flex items-center justify-between gap-4 list-none">
-                  <span className="text-[12px] font-bold tracking-[0.1em] text-charcoal leading-[1.5] normal-case">
+                  <span className="text-[12px] font-bold tracking-[0.1em] text-cream leading-[1.5] normal-case">
                     {item.q}
                   </span>
-                  <span className="text-rose text-[18px] shrink-0 group-open:rotate-45 transition-transform">
+                  <span className="text-gold text-[18px] shrink-0 group-open:rotate-45 transition-transform">
                     +
                   </span>
                 </summary>
-                <div className="px-6 pb-5 -mt-1 text-[10px] tracking-[0.08em] text-muted leading-[1.9] normal-case">
+                <div className="px-6 pb-5 -mt-1 text-[10px] tracking-[0.08em] text-cream/60 leading-[1.9] normal-case">
                   {item.a}
                 </div>
               </details>
@@ -598,37 +638,44 @@ export function BusinessLanding() {
       </section>
 
       {/* Inscription form */}
-      <section id="inscription" className="px-6 py-[100px] bg-gradient-to-b from-warm-white to-cream">
-        <div className="max-w-[680px] mx-auto">
+      <section id="inscription" className="px-6 py-[110px] border-t border-gold/10 relative overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-60"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 100%, rgba(201, 169, 110, 0.16) 0%, transparent 60%)",
+          }}
+        />
+        <div className="max-w-[680px] mx-auto relative">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5 text-center">
             Inscription
           </p>
-          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-charcoal mb-3 text-center leading-[1.2]">
+          <h2 className="font-sans text-[28px] sm:text-[36px] font-extrabold tracking-[0.02em] text-cream mb-3 text-center leading-[1.2]">
             Rejoins la{" "}
-            <Script className="text-rose text-[44px] sm:text-[56px] inline-block leading-[0.9]">
+            <Script className="text-gold text-[44px] sm:text-[56px] inline-block leading-[0.9]">
               liste d&apos;attente
             </Script>
           </h2>
-          <p className="text-center text-[11px] tracking-[0.14em] text-muted mb-10 leading-[1.85] normal-case">
+          <p className="text-center text-[11px] tracking-[0.14em] text-cream/55 mb-10 leading-[1.85] normal-case">
             Lancement aux businesses prévu dans les prochaines semaines. Soumets ton commerce maintenant pour passer en priorité.
           </p>
 
           {submitted ? (
-            <div className="bg-warm-white border border-rose/15 rounded-[24px] p-10 sm:p-12 text-center">
-              <p className="font-script text-[48px] sm:text-[60px] text-rose mb-3 leading-none">
+            <div className="bg-[#221c17] border border-gold/25 rounded-[24px] p-10 sm:p-12 text-center">
+              <p className="font-script text-[48px] sm:text-[60px] text-gold mb-3 leading-none">
                 merci ✨
               </p>
-              <p className="text-[11px] tracking-[0.14em] text-charcoal mb-2 leading-[1.7]">
+              <p className="text-[11px] tracking-[0.14em] text-cream mb-2 leading-[1.7]">
                 Ta demande a été reçue.
               </p>
-              <p className="text-[10px] tracking-[0.12em] text-muted leading-[1.8] normal-case max-w-md mx-auto">
+              <p className="text-[10px] tracking-[0.12em] text-cream/60 leading-[1.8] normal-case max-w-md mx-auto">
                 On revient vers toi dans les 24-48 heures ouvrables avec les prochaines étapes (vérification + activation du compte).
               </p>
             </div>
           ) : (
             <form
               onSubmit={handleSubmit}
-              className="bg-warm-white border border-rose/15 rounded-[24px] p-7 sm:p-10 space-y-6"
+              className="bg-[#221c17] border border-gold/20 rounded-[24px] p-7 sm:p-10 space-y-6"
             >
               <FormField label="Nom du commerce *">
                 <input
@@ -636,7 +683,7 @@ export function BusinessLanding() {
                   name="businessName"
                   required
                   placeholder="Ex : Vignoble du Lac"
-                  className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
+                  className={INPUT_CLASS}
                 />
               </FormField>
 
@@ -645,7 +692,7 @@ export function BusinessLanding() {
                   name="businessType"
                   required
                   defaultValue=""
-                  className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors"
+                  className={INPUT_CLASS}
                 >
                   <option value="" disabled>
                     Choisis ton type
@@ -665,7 +712,7 @@ export function BusinessLanding() {
                     name="email"
                     required
                     placeholder="contact@business.com"
-                    className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
+                    className={INPUT_CLASS}
                   />
                 </FormField>
 
@@ -674,7 +721,7 @@ export function BusinessLanding() {
                     type="tel"
                     name="phone"
                     placeholder="+1 514 555-0100"
-                    className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
+                    className={INPUT_CLASS}
                   />
                 </FormField>
               </div>
@@ -685,7 +732,7 @@ export function BusinessLanding() {
                   name="website"
                   required
                   placeholder="https://"
-                  className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
+                  className={INPUT_CLASS}
                 />
               </FormField>
 
@@ -695,7 +742,7 @@ export function BusinessLanding() {
                   name="taxNumber"
                   required
                   placeholder="123456789RT0001"
-                  className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
+                  className={INPUT_CLASS}
                 />
               </FormField>
 
@@ -705,7 +752,7 @@ export function BusinessLanding() {
                   required
                   rows={2}
                   placeholder="Rue, ville, code postal"
-                  className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40 resize-none"
+                  className={`${INPUT_CLASS} resize-none`}
                 />
               </FormField>
 
@@ -717,7 +764,7 @@ export function BusinessLanding() {
                   name="description"
                   rows={3}
                   placeholder="Type d'expérience, points forts, ce qui te distingue..."
-                  className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40 resize-none"
+                  className={`${INPUT_CLASS} resize-none`}
                 />
               </FormField>
 
@@ -726,7 +773,7 @@ export function BusinessLanding() {
                   name="tier"
                   required
                   defaultValue=""
-                  className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors"
+                  className={INPUT_CLASS}
                 >
                   <option value="" disabled>
                     Choisis un forfait
@@ -738,14 +785,14 @@ export function BusinessLanding() {
                 </select>
               </FormField>
 
-              <div className="bg-light-gold/30 border border-gold/30 rounded-[16px] p-5">
+              <div className="bg-gold/10 border border-gold/25 rounded-[16px] p-5">
                 <label className="flex items-start gap-3 cursor-pointer mb-4">
                   <input
                     type="checkbox"
                     name="interestedInSponsoring"
-                    className="mt-1 w-4 h-4 accent-rose cursor-pointer"
+                    className="mt-1 w-4 h-4 accent-gold cursor-pointer"
                   />
-                  <span className="text-[11px] font-bold tracking-[0.12em] text-charcoal leading-[1.5] normal-case">
+                  <span className="text-[11px] font-bold tracking-[0.12em] text-cream leading-[1.5] normal-case">
                     Je veux qu&apos;Eve me suggère des offres à publier (15 $/sem ou 40 $/mois par offre)
                   </span>
                 </label>
@@ -754,13 +801,13 @@ export function BusinessLanding() {
                     name="sponsoredOffer"
                     rows={2}
                     placeholder="Ex : 2 pour 1 sur les cocktails, menu dégustation -20 %, dessert offert..."
-                    className="w-full px-5 py-3 border-[1.5px] border-rose/20 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40 resize-none"
+                    className={`${INPUT_CLASS} resize-none`}
                   />
                 </FormField>
               </div>
 
               {errorMsg && (
-                <div className="bg-rose/10 border border-rose/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg leading-[1.6] normal-case">
+                <div className="bg-rose/15 border border-rose/40 text-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg leading-[1.6] normal-case">
                   {errorMsg}
                 </div>
               )}
@@ -770,14 +817,14 @@ export function BusinessLanding() {
                 disabled={submitting}
                 className={`w-full py-4 rounded-full text-[11px] font-bold tracking-[0.22em] transition-all cursor-pointer mt-2 ${
                   submitting
-                    ? "bg-rose/50 text-white cursor-not-allowed"
-                    : "bg-rose text-white hover:bg-deep-rose hover:-translate-y-0.5"
+                    ? "bg-gold/40 text-charcoal/50 cursor-not-allowed"
+                    : "bg-gold text-charcoal hover:bg-cream hover:-translate-y-0.5"
                 }`}
               >
                 {submitting ? "Envoi en cours..." : "Envoyer ma demande →"}
               </button>
 
-              <p className="text-center text-[9px] tracking-[0.18em] text-muted mt-3 leading-[1.7] normal-case">
+              <p className="text-center text-[9px] tracking-[0.18em] text-cream/50 mt-3 leading-[1.7] normal-case">
                 On revient vers toi dans 24-48 heures ouvrables. Aucune carte requise pour s&apos;inscrire à la liste.
               </p>
             </form>
@@ -786,10 +833,10 @@ export function BusinessLanding() {
       </section>
 
       {/* Footer link */}
-      <footer className="px-6 py-12 border-t border-rose/10 text-center">
+      <footer className="px-6 py-12 border-t border-gold/15 text-center">
         <Link
           href="/"
-          className="font-script text-[24px] text-charcoal hover:text-rose transition-colors"
+          className="font-script text-[24px] text-cream hover:text-gold transition-colors"
         >
           ← Retour côté utilisateur
         </Link>
@@ -797,6 +844,9 @@ export function BusinessLanding() {
     </main>
   );
 }
+
+const INPUT_CLASS =
+  "w-full px-5 py-3.5 border-[1.5px] border-gold/25 rounded-xl text-[12px] font-medium tracking-[0.1em] text-cream bg-charcoal/60 outline-none focus:border-gold transition-colors placeholder:text-cream/30";
 
 function FormField({
   label,
@@ -809,7 +859,7 @@ function FormField({
 }) {
   return (
     <div>
-      <label className="block text-[10px] font-bold tracking-[0.22em] text-muted mb-3">
+      <label className="block text-[10px] font-bold tracking-[0.22em] text-gold/85 mb-3">
         {label}
         {hint && (
           <span className="text-rose ml-2 tracking-normal lowercase font-normal">
