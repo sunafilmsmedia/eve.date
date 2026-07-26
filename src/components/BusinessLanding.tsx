@@ -18,7 +18,7 @@ const HOW_IT_WORKS = [
   {
     icon: "3",
     title: "Tu payes selon ton forfait",
-    desc: "Genesis = 2 $ par réservation. Utopia = 100 réservations incluses. Paradise = illimité. Aucun pourcentage, aucune commission cachée.",
+    desc: "Genesis = 2 $ par réservation. Utopia = 100 réservations incluses. Paradis = illimité. Aucun pourcentage, aucune commission cachée.",
   },
 ];
 
@@ -55,7 +55,7 @@ const TIERS = [
   },
   {
     key: "paradise",
-    label: "Paradise",
+    label: "Paradis",
     tagline: "Volume élevé + offres incluses",
     price: "$299",
     period: "/mois",
@@ -65,7 +65,7 @@ const TIERS = [
       "Placement prioritaire toute l'année",
       "Support dédié",
     ],
-    cta: "Passer à Paradise",
+    cta: "Passer à Paradis",
     highlighted: false,
   },
 ];
@@ -109,7 +109,7 @@ const EVE_OFFER_EXAMPLES = [
 const FAQ = [
   {
     q: "Quels sont les 3 forfaits Adam ?",
-    a: "Genesis (10 $/mois + 2 $ par réservation) pour tester Adam. Utopia (99 $/mois avec 100 réservations incluses) pour la plupart des partenaires. Paradise (299 $/mois, réservations illimitées + 2 publications d'offres gratuites) pour les gros volumes.",
+    a: "Genesis (10 $/mois + 2 $ par réservation) pour tester Adam. Utopia (99 $/mois avec 100 réservations incluses) pour la plupart des partenaires. Paradis (299 $/mois, réservations illimitées + 2 publications d'offres gratuites) pour les gros volumes.",
   },
   {
     q: "C'est quoi une « offre » et comment Eve me la suggère ?",
@@ -117,7 +117,7 @@ const FAQ = [
   },
   {
     q: "Combien coûte la mise en ligne d'une offre ?",
-    a: "15 $/semaine ou 40 $/mois par offre publiée, peu importe ton forfait. Paradise inclut 2 publications gratuites par mois. Tu peux modifier ou retirer l'offre à tout moment.",
+    a: "15 $/semaine ou 40 $/mois par offre publiée, peu importe ton forfait. Paradis inclut 2 publications gratuites par mois. Tu peux modifier ou retirer l'offre à tout moment.",
   },
   {
     q: "Pourquoi « Adam » ?",
@@ -267,7 +267,7 @@ export function BusinessLanding() {
         />
         <div className="max-w-[860px] mx-auto text-center relative">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5">
-            Adam · Le côté partenaires
+            Rejoindre Adam
           </p>
           <h1 className="font-sans text-[36px] sm:text-[52px] md:text-[64px] font-extrabold tracking-[0.01em] text-cream mb-3 leading-[1.1]">
             Fais-toi recommander aux gens qui{" "}
@@ -277,7 +277,7 @@ export function BusinessLanding() {
             quoi faire
           </h1>
           <p className="text-[12px] sm:text-[14px] tracking-[0.16em] text-cream/65 mt-8 mb-10 leading-[1.85] max-w-[640px] mx-auto normal-case">
-            Eve oriente couples, amis et groupes vers ton commerce selon leur budget, leur ville, leur ambiance recherchée. Trois forfaits — <b className="text-gold">Genesis</b>, <b className="text-gold">Utopia</b>, <b className="text-gold">Paradise</b> — dès 10 $/mois. Aucun pourcentage sur tes ventes.
+            Eve oriente couples, amis et groupes vers ton commerce selon leur budget, leur ville, leur ambiance recherchée. Trois forfaits — <b className="text-gold">Genesis</b>, <b className="text-gold">Utopia</b>, <b className="text-gold">Paradis</b> — dès 10 $/mois. Aucun pourcentage sur tes ventes.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <a
@@ -511,7 +511,7 @@ export function BusinessLanding() {
                   </div>
                 </div>
                 <p className="text-[10px] tracking-[0.14em] text-charcoal/75 leading-[1.75] mb-5 normal-case">
-                  Par offre publiée, peu importe ton forfait. Le forfait <b className="text-charcoal">Paradise</b> inclut <b className="text-charcoal">2 publications gratuites/mois</b>.
+                  Par offre publiée, peu importe ton forfait. Le forfait <b className="text-charcoal">Paradis</b> inclut <b className="text-charcoal">2 publications gratuites/mois</b>.
                 </p>
                 <div className="bg-charcoal/10 rounded-xl p-4 mt-auto">
                   <p className="text-[9px] font-bold tracking-[0.22em] text-charcoal/50 mb-3">
@@ -786,7 +786,7 @@ export function BusinessLanding() {
                   </option>
                   <option value="genesis">Genesis — 10 $/mois + 2 $/réservation</option>
                   <option value="utopia">Utopia — 99 $/mois (100 résas incluses)</option>
-                  <option value="paradise">Paradise — 299 $/mois (illimité + 2 offres)</option>
+                  <option value="paradise">Paradis — 299 $/mois (illimité + 2 offres)</option>
                   <option value="pas_sur">Je ne sais pas encore</option>
                 </select>
               </FormField>

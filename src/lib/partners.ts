@@ -179,7 +179,7 @@ export const PARTNER_TIERS: Record<BusinessTier, TierConfig> = {
     publishedOffersIncluded: 0,
   },
   paradise: {
-    label: "Paradise",
+    label: "Paradis",
     tagline: "Volume élevé + offres incluses",
     monthlyCents: 29900,
     reservationsIncluded: null,

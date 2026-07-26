@@ -3,14 +3,15 @@ import { Script } from "@/components/Script";
 import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { signup } from "@/app/login/actions";
 
-type SearchParams = Promise<{ error?: string; message?: string }>;
+type SearchParams = Promise<{ error?: string; message?: string; next?: string }>;
 
 export default async function SignupPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
-  const { error, message } = await searchParams;
+  const { error, message, next } = await searchParams;
+  const safeNext = next && next.startsWith("/") ? next : "/start";
 
   return (
     <main className="min-h-screen flex items-center justify-center px-6 py-20">
@@ -37,36 +38,23 @@ export default async function SignupPage({
             tes sorties
           </h1>
           <p className="text-[10px] tracking-[0.14em] text-muted mb-8 leading-[1.8] normal-case">
-            Eve apprend à connaître tes préférences, tes relations et tes sorties passées pour te proposer des idées de plus en plus personnalisées.
+            Eve apprend à connaître tes préférences et ton historique pour te proposer des sorties de plus en plus personnalisées.
           </p>
 
           {message && (
-            <div className="bg-light-gold/40 border border-gold/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg mb-6 text-center">
+            <div className="bg-light-gold/40 border border-gold/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg mb-6 text-center leading-[1.6] normal-case">
               {message}
             </div>
           )}
           {error && (
-            <div className="bg-rose/10 border border-rose/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg mb-6 text-center">
+            <div className="bg-rose/10 border border-rose/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg mb-6 text-center leading-[1.6] normal-case">
               {error}
             </div>
           )}
 
-          <div className="flex flex-col gap-3 mb-6">
-            <GoogleSignInButton
-              next="/start"
-              label="Continuer avec Google"
-              variant="primary"
-              fullWidth
-            />
-          </div>
-
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-px bg-rose/15 flex-1" />
-            <span className="text-[9px] tracking-[0.28em] text-muted">Ou avec email</span>
-            <div className="h-px bg-rose/15 flex-1" />
-          </div>
-
-          <form className="flex flex-col gap-4">
+          {/* Email + password — PRIMARY */}
+          <form action={signup} className="flex flex-col gap-4 mb-2">
+            <input type="hidden" name="next" value={safeNext} />
             <div>
               <label
                 htmlFor="email"
@@ -79,6 +67,7 @@ export default async function SignupPage({
                 name="email"
                 type="email"
                 required
+                autoComplete="email"
                 placeholder="ton@email.com"
                 className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[11px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
               />
@@ -96,18 +85,34 @@ export default async function SignupPage({
                 type="password"
                 required
                 minLength={6}
+                autoComplete="new-password"
                 placeholder="Au moins 6 caractères"
                 className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[11px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
               />
             </div>
 
             <button
-              formAction={signup}
+              type="submit"
               className="w-full bg-rose text-white py-3.5 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose transition-colors cursor-pointer mt-2"
             >
               Créer mon compte
             </button>
           </form>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-6">
+            <div className="h-px bg-rose/15 flex-1" />
+            <span className="text-[9px] tracking-[0.28em] text-muted">Ou plus rapide</span>
+            <div className="h-px bg-rose/15 flex-1" />
+          </div>
+
+          {/* Google — SECONDARY */}
+          <GoogleSignInButton
+            next={safeNext}
+            label="Continuer avec Google"
+            variant="outline"
+            fullWidth
+          />
 
           <p className="text-[9px] tracking-[0.16em] text-muted mt-7 leading-[1.8] normal-case">
             Tes informations servent uniquement à personnaliser tes recommandations. Tu peux modifier ou supprimer tes profils à tout moment.

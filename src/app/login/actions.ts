@@ -70,14 +70,24 @@ export async function signup(formData: FormData) {
   const supabase = await createClient();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  const nextRaw = formData.get("next") as string | null;
+  const next = nextRaw && nextRaw.startsWith("/") ? nextRaw : "/start";
 
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({ email, password });
 
   if (error) {
     redirect(`/signup?error=${encodeURIComponent(error.message)}`);
   }
 
-  redirect("/login?message=Compte créé, vérifie ton email pour confirmer puis connecte-toi.");
+  // If the Supabase project has email confirmation OFF, signUp returns a
+  // session immediately and the user is authed — send them straight into
+  // the app. Otherwise they need to click the confirmation link first.
+  if (data?.session) {
+    revalidatePath("/", "layout");
+    redirect(next);
+  }
+
+  redirect("/login?message=Compte créé. Vérifie ton email pour le confirmer, puis connecte-toi ici.");
 }
 
 export async function logout() {

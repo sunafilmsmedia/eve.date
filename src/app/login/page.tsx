@@ -42,32 +42,19 @@ export default async function LoginPage({
           </p>
 
           {message && (
-            <div className="bg-light-gold/40 border border-gold/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg mb-6 text-center">
+            <div className="bg-light-gold/40 border border-gold/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg mb-6 text-center leading-[1.6] normal-case">
               {message}
             </div>
           )}
           {error && (
-            <div className="bg-rose/10 border border-rose/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg mb-6 text-center">
+            <div className="bg-rose/10 border border-rose/30 text-deep-rose text-[10px] font-semibold tracking-[0.12em] px-4 py-3 rounded-lg mb-6 text-center leading-[1.6] normal-case">
               {error}
             </div>
           )}
 
-          <div className="flex flex-col gap-3 mb-6">
-            <GoogleSignInButton
-              next={safeNext}
-              label="Se connecter avec Google"
-              variant="primary"
-              fullWidth
-            />
-          </div>
-
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-px bg-rose/15 flex-1" />
-            <span className="text-[9px] tracking-[0.28em] text-muted">Ou avec email</span>
-            <div className="h-px bg-rose/15 flex-1" />
-          </div>
-
-          <form className="flex flex-col gap-4">
+          {/* Email + password — PRIMARY */}
+          <form action={login} className="flex flex-col gap-4 mb-2">
+            <input type="hidden" name="next" value={safeNext} />
             <div>
               <label
                 htmlFor="email"
@@ -80,6 +67,7 @@ export default async function LoginPage({
                 name="email"
                 type="email"
                 required
+                autoComplete="email"
                 placeholder="ton@email.com"
                 className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[11px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
               />
@@ -96,23 +84,39 @@ export default async function LoginPage({
                 name="password"
                 type="password"
                 required
+                autoComplete="current-password"
                 placeholder="••••••••"
                 className="w-full px-5 py-3.5 border-[1.5px] border-rose/20 rounded-xl text-[11px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
               />
             </div>
 
             <button
-              formAction={login}
+              type="submit"
               className="w-full bg-rose text-white py-3.5 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose transition-colors cursor-pointer mt-2"
             >
               Me connecter
             </button>
           </form>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-6">
+            <div className="h-px bg-rose/15 flex-1" />
+            <span className="text-[9px] tracking-[0.28em] text-muted">Ou plus rapide</span>
+            <div className="h-px bg-rose/15 flex-1" />
+          </div>
+
+          {/* Google — SECONDARY */}
+          <GoogleSignInButton
+            next={safeNext}
+            label="Se connecter avec Google"
+            variant="outline"
+            fullWidth
+          />
         </div>
 
         <p className="text-center mt-7 text-[10px] tracking-[0.18em] text-muted">
           Pas encore de compte ?{" "}
-          <Link href="/signup" className="text-rose hover:text-deep-rose transition-colors font-bold">
+          <Link href={`/signup${next ? `?next=${encodeURIComponent(safeNext)}` : ""}`} className="text-rose hover:text-deep-rose transition-colors font-bold">
             Créer mon compte
           </Link>
         </p>

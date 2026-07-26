@@ -16,7 +16,7 @@ const TIERS = [
     featured: true,
   },
   {
-    name: "Paradise",
+    name: "Paradis",
     price: "$299",
     period: "/mois",
     hint: "Illimité + 2 offres/mois",
@@ -30,7 +30,7 @@ export function BusinessPartner() {
       className="px-6 py-[120px] bg-gradient-to-b from-cream to-warm-white"
     >
       <SectionHeader
-        label="Adam · Le côté partenaires"
+        label="Rejoindre Adam"
         title={
           <>
             Restaurants, spas, expériences —{" "}
