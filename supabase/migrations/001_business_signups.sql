@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.business_signups (
 
   -- Which tier the business is interested in (chosen in signup form).
   -- Nullable + free text so "je ne sais pas encore" and future tiers work
-  -- without a migration; app-side we constrain to depart/croissance/domination/pas_sur.
+  -- without a migration; app-side we constrain to genesis/utopia/paradise/pas_sur.
   tier TEXT,
 
   -- Interest in Eve-suggested offer publications (15$/wk or 40$/mo per offer).

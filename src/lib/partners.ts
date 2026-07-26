@@ -12,7 +12,7 @@
 
 export type OfferCategory = "resto" | "spa" | "activite" | "bar" | "autre";
 
-export type BusinessTier = "depart" | "croissance" | "domination";
+export type BusinessTier = "genesis" | "utopia" | "paradise";
 
 export type BusinessStatus =
   | "pending_verification"
@@ -162,24 +162,24 @@ export type TierConfig = {
 };
 
 export const PARTNER_TIERS: Record<BusinessTier, TierConfig> = {
-  depart: {
-    label: "Départ",
-    tagline: "Tu testes Eve",
+  genesis: {
+    label: "Genesis",
+    tagline: "Tu testes Adam",
     monthlyCents: 1000,
     reservationsIncluded: 0,
     reservationExtraCents: 200,
     publishedOffersIncluded: 0,
   },
-  croissance: {
-    label: "Croissance",
+  utopia: {
+    label: "Utopia",
     tagline: "Le forfait de la plupart des partenaires",
     monthlyCents: 9900,
     reservationsIncluded: 100,
     reservationExtraCents: 200,
     publishedOffersIncluded: 0,
   },
-  domination: {
-    label: "Domination",
+  paradise: {
+    label: "Paradise",
     tagline: "Volume élevé + offres incluses",
     monthlyCents: 29900,
     reservationsIncluded: null,

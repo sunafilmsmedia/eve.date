@@ -63,7 +63,7 @@ create table if not exists public.businesses (
   website              text,
   description          text,
   logo_url             text,
-  tier                 text not null default 'depart' check (tier in ('depart','croissance','domination')),
+  tier                 text not null default 'genesis' check (tier in ('genesis','utopia','paradise')),
   status               text not null default 'pending_verification'
                          check (status in ('pending_verification','active','suspended','churned')),
   stripe_customer_id   text,

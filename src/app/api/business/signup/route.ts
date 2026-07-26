@@ -14,7 +14,7 @@ type Payload = {
   sponsored_offer?: string;
 };
 
-const ALLOWED_TIERS = new Set(["depart", "croissance", "domination", "pas_sur"]);
+const ALLOWED_TIERS = new Set(["genesis", "utopia", "paradise", "pas_sur"]);
 
 const REQUIRED_FIELDS: (keyof Payload)[] = [
   "business_name",

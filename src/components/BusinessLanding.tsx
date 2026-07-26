@@ -18,15 +18,15 @@ const HOW_IT_WORKS = [
   {
     icon: "3",
     title: "Tu payes selon ton forfait",
-    desc: "Départ = 2 $ par réservation. Croissance = 100 réservations incluses. Domination = illimité. Aucun pourcentage, aucune commission cachée.",
+    desc: "Genesis = 2 $ par réservation. Utopia = 100 réservations incluses. Paradise = illimité. Aucun pourcentage, aucune commission cachée.",
   },
 ];
 
 const TIERS = [
   {
-    key: "depart",
-    label: "Départ",
-    tagline: "Tu testes Eve",
+    key: "genesis",
+    label: "Genesis",
+    tagline: "Tu testes Adam",
     price: "$10",
     period: "/mois",
     features: [
@@ -35,12 +35,12 @@ const TIERS = [
       "Accès au tableau de bord",
       "Aucun engagement — annule quand tu veux",
     ],
-    cta: "Commencer avec Départ",
+    cta: "Commencer avec Genesis",
     highlighted: false,
   },
   {
-    key: "croissance",
-    label: "Croissance",
+    key: "utopia",
+    label: "Utopia",
     tagline: "Le choix de la plupart des partenaires",
     price: "$99",
     period: "/mois",
@@ -50,12 +50,12 @@ const TIERS = [
       "Priorité dans les recommandations",
       "Stats de performance détaillées",
     ],
-    cta: "Choisir Croissance",
+    cta: "Choisir Utopia",
     highlighted: true,
   },
   {
-    key: "domination",
-    label: "Domination",
+    key: "paradise",
+    label: "Paradise",
     tagline: "Volume élevé + offres incluses",
     price: "$299",
     period: "/mois",
@@ -65,7 +65,7 @@ const TIERS = [
       "Placement prioritaire toute l'année",
       "Support dédié",
     ],
-    cta: "Passer à Domination",
+    cta: "Passer à Paradise",
     highlighted: false,
   },
 ];
@@ -108,8 +108,8 @@ const EVE_OFFER_EXAMPLES = [
 
 const FAQ = [
   {
-    q: "Quels sont les 3 forfaits ?",
-    a: "Départ (10 $/mois + 2 $ par réservation) pour tester Eve. Croissance (99 $/mois avec 100 réservations incluses) pour la plupart des partenaires. Domination (299 $/mois, réservations illimitées + 2 publications d'offres gratuites) pour les gros volumes.",
+    q: "Quels sont les 3 forfaits Adam ?",
+    a: "Genesis (10 $/mois + 2 $ par réservation) pour tester Adam. Utopia (99 $/mois avec 100 réservations incluses) pour la plupart des partenaires. Paradise (299 $/mois, réservations illimitées + 2 publications d'offres gratuites) pour les gros volumes.",
   },
   {
     q: "C'est quoi une « offre » et comment Eve me la suggère ?",
@@ -117,7 +117,11 @@ const FAQ = [
   },
   {
     q: "Combien coûte la mise en ligne d'une offre ?",
-    a: "15 $/semaine ou 40 $/mois par offre publiée, peu importe ton forfait. Domination inclut 2 publications gratuites par mois. Tu peux modifier ou retirer l'offre à tout moment.",
+    a: "15 $/semaine ou 40 $/mois par offre publiée, peu importe ton forfait. Paradise inclut 2 publications gratuites par mois. Tu peux modifier ou retirer l'offre à tout moment.",
+  },
+  {
+    q: "Pourquoi « Adam » ?",
+    a: "Eve, c'est le côté utilisateur — la personne qui cherche une sortie. Adam, c'est le côté partenaire — le commerce qui l'accueille. Deux plateformes, une seule mission : aider les gens à savoir quoi faire ce soir.",
   },
   {
     q: "Comment je reçois mon argent ?",
@@ -225,12 +229,14 @@ export function BusinessLanding() {
       <nav className="px-6 py-5 border-b border-gold/15 bg-charcoal/85 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-[1100px] mx-auto flex items-center justify-between flex-wrap gap-4">
           <Link
-            href="/"
-            className="inline-block font-script text-[32px] text-cream leading-none hover:text-gold transition-colors"
+            href="/business"
+            className="inline-block leading-none hover:opacity-80 transition-opacity"
           >
-            Eve
-            <span className="font-sans text-[10px] font-bold text-gold tracking-[0.3em] uppercase align-middle ml-1.5">
-              AI
+            <span className="font-script text-[32px] text-gold leading-none">
+              Adam
+            </span>
+            <span className="font-sans text-[9px] font-bold text-cream/50 tracking-[0.3em] uppercase align-middle ml-2">
+              by Eve AI
             </span>
           </Link>
           <div className="flex items-center gap-5">
@@ -238,7 +244,7 @@ export function BusinessLanding() {
               href="/"
               className="text-[10px] font-bold tracking-[0.18em] text-cream/60 hover:text-gold transition-colors"
             >
-              ← Côté utilisateur
+              ← Côté Eve
             </Link>
             <a
               href="#inscription"
@@ -261,7 +267,7 @@ export function BusinessLanding() {
         />
         <div className="max-w-[860px] mx-auto text-center relative">
           <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-5">
-            Côté commerces
+            Adam · Le côté partenaires
           </p>
           <h1 className="font-sans text-[36px] sm:text-[52px] md:text-[64px] font-extrabold tracking-[0.01em] text-cream mb-3 leading-[1.1]">
             Fais-toi recommander aux gens qui{" "}
@@ -271,7 +277,7 @@ export function BusinessLanding() {
             quoi faire
           </h1>
           <p className="text-[12px] sm:text-[14px] tracking-[0.16em] text-cream/65 mt-8 mb-10 leading-[1.85] max-w-[640px] mx-auto normal-case">
-            Eve oriente couples, amis et groupes vers ton commerce selon leur budget, leur ville, leur ambiance recherchée. 3 forfaits — dès 10 $/mois. Aucun pourcentage sur tes ventes.
+            Eve oriente couples, amis et groupes vers ton commerce selon leur budget, leur ville, leur ambiance recherchée. Trois forfaits — <b className="text-gold">Genesis</b>, <b className="text-gold">Utopia</b>, <b className="text-gold">Paradise</b> — dès 10 $/mois. Aucun pourcentage sur tes ventes.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <a
@@ -505,7 +511,7 @@ export function BusinessLanding() {
                   </div>
                 </div>
                 <p className="text-[10px] tracking-[0.14em] text-charcoal/75 leading-[1.75] mb-5 normal-case">
-                  Par offre publiée, peu importe ton forfait. Le forfait <b className="text-charcoal">Domination</b> inclut <b className="text-charcoal">2 publications gratuites/mois</b>.
+                  Par offre publiée, peu importe ton forfait. Le forfait <b className="text-charcoal">Paradise</b> inclut <b className="text-charcoal">2 publications gratuites/mois</b>.
                 </p>
                 <div className="bg-charcoal/10 rounded-xl p-4 mt-auto">
                   <p className="text-[9px] font-bold tracking-[0.22em] text-charcoal/50 mb-3">
@@ -778,9 +784,9 @@ export function BusinessLanding() {
                   <option value="" disabled>
                     Choisis un forfait
                   </option>
-                  <option value="depart">Départ — 10 $/mois + 2 $/réservation</option>
-                  <option value="croissance">Croissance — 99 $/mois (100 résas incluses)</option>
-                  <option value="domination">Domination — 299 $/mois (illimité + 2 offres)</option>
+                  <option value="genesis">Genesis — 10 $/mois + 2 $/réservation</option>
+                  <option value="utopia">Utopia — 99 $/mois (100 résas incluses)</option>
+                  <option value="paradise">Paradise — 299 $/mois (illimité + 2 offres)</option>
                   <option value="pas_sur">Je ne sais pas encore</option>
                 </select>
               </FormField>
@@ -838,7 +844,7 @@ export function BusinessLanding() {
           href="/"
           className="font-script text-[24px] text-cream hover:text-gold transition-colors"
         >
-          ← Retour côté utilisateur
+          ← Retour côté Eve
         </Link>
       </footer>
     </main>
