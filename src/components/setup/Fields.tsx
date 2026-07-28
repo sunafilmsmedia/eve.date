@@ -275,6 +275,8 @@ type FormCardProps = {
   children: React.ReactNode;
   onSubmit: (e: React.FormEvent) => void;
   submitLabel?: string;
+  submitDisabled?: boolean;
+  submitHint?: string;
 };
 
 export function FormCard({
@@ -284,6 +286,8 @@ export function FormCard({
   children,
   onSubmit,
   submitLabel = "Créer le profil →",
+  submitDisabled = false,
+  submitHint,
 }: FormCardProps) {
   return (
     <>
@@ -303,12 +307,24 @@ export function FormCard({
       >
         {children}
 
-        <button
-          type="submit"
-          className="w-full bg-rose text-white py-4 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all cursor-pointer mt-2"
-        >
-          {submitLabel}
-        </button>
+        <div className="mt-2">
+          <button
+            type="submit"
+            disabled={submitDisabled}
+            className={`w-full py-4 rounded-full text-[11px] font-bold tracking-[0.22em] transition-all ${
+              submitDisabled
+                ? "bg-rose/30 text-white/70 cursor-not-allowed"
+                : "bg-rose text-white hover:bg-deep-rose hover:-translate-y-0.5 cursor-pointer"
+            }`}
+          >
+            {submitLabel}
+          </button>
+          {submitDisabled && submitHint && (
+            <p className="text-[10px] tracking-[0.14em] text-muted mt-3 text-center normal-case">
+              {submitHint}
+            </p>
+          )}
+        </div>
       </form>
     </>
   );

@@ -91,12 +91,16 @@ export function CoupleForm() {
     router.push("/dates");
   };
 
+  const gateOpen = partnerGender !== "";
+
   return (
     <FormCard
       title="Parle-moi de"
       scriptWord="ta moitié"
       description="Eve va t'aider à créer des sorties vraiment adaptées à votre couple."
       onSubmit={handleSubmit}
+      submitDisabled={!gateOpen}
+      submitHint="Choisis d'abord si ta moitié est une femme ou un homme."
     >
       <div>
         <FieldLabel>Ta moitié est *</FieldLabel>
@@ -114,6 +118,19 @@ export function CoupleForm() {
         />
       </div>
 
+      {!gateOpen && (
+        <div className="bg-light-gold/30 border border-gold/30 rounded-[18px] p-5 text-center">
+          <p className="font-script text-[26px] text-deep-rose leading-none mb-1.5">
+            un instant
+          </p>
+          <p className="text-[10px] tracking-[0.14em] text-muted leading-[1.7] normal-case">
+            Fais ce choix pour qu&apos;Eve adapte tout le reste (elle / il, ses passions, ses surnoms, tout ça).
+          </p>
+        </div>
+      )}
+
+      {gateOpen && (
+        <>
       <div>
         <FieldLabel>Son prénom *</FieldLabel>
         <TextInput
@@ -213,6 +230,8 @@ export function CoupleForm() {
           format={(v) => `$${v}`}
         />
       </div>
+        </>
+      )}
     </FormCard>
   );
 }
