@@ -182,7 +182,7 @@ export function BusinessLanding() {
       email: String(fd.get("email") ?? "").trim(),
       phone: String(fd.get("phone") ?? "").trim() || undefined,
       website: String(fd.get("website") ?? "").trim(),
-      tax_number: String(fd.get("taxNumber") ?? "").trim(),
+      incorporation_name: String(fd.get("incorporationName") ?? "").trim(),
       billing_address: String(fd.get("billingAddress") ?? "").trim(),
       description: String(fd.get("description") ?? "").trim() || undefined,
       tier: String(fd.get("tier") ?? "").trim() || undefined,
@@ -742,12 +742,12 @@ export function BusinessLanding() {
                 />
               </FormField>
 
-              <FormField label="Numéro de TPS/TVQ *">
+              <FormField label="Nom de l'incorporation *" hint="(INC / Ltée)">
                 <input
                   type="text"
-                  name="taxNumber"
+                  name="incorporationName"
                   required
-                  placeholder="123456789RT0001"
+                  placeholder="Ex : Vignoble du Lac Inc."
                   className={INPUT_CLASS}
                 />
               </FormField>

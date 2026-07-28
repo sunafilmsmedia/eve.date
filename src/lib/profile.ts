@@ -40,8 +40,9 @@ export const OUTING_TYPES: {
 export type City = "Montréal" | "Laval" | "Brossard" | "Magog" | "Autre";
 
 // Partner gender drives pronoun choice in copy ("elle adore" vs "il adore").
-// "other" keeps the neutral "iel". Undefined = not chosen yet, fallback to "iel".
-export type PartnerGender = "woman" | "man" | "other";
+// Binary by user request — no "iel" anywhere. Undefined = not chosen yet,
+// fallback to "il" (default masculine) so copy still reads naturally.
+export type PartnerGender = "woman" | "man";
 
 // Profile per outing type
 export type CoupleProfile = {
@@ -175,12 +176,17 @@ export function getSubjectScript(t: OutingType): string {
 }
 
 // Get display name from any profile type (for /dates page header).
-// For couples with multiple nicknames, returns them joined by ", ".
+// For couples with multiple nicknames, rotates through them ONE at a time
+// on a daily cadence (index tied to UTC day), so the display feels alive
+// but stays stable within a session.
 export function getDisplayName(profile: Profile | null): string | null {
   if (!profile) return null;
   if (profile.type === "couple") {
     const list = getCoupleNicknames(profile);
-    if (list.length) return list.join(", ");
+    if (list.length) {
+      const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+      return list[dayIndex % list.length];
+    }
     return profile.name?.trim() || null;
   }
   return null;
@@ -202,11 +208,11 @@ export function getCoupleNicknames(profile: CoupleProfile): string[] {
   return list;
 }
 
-// Pronoun for adaptive copy ("ce qu'elle/il/iel adore").
-export function getPartnerPronoun(gender: PartnerGender | undefined): "elle" | "il" | "iel" {
+// Pronoun for adaptive copy ("ce qu'elle adore" vs "ce qu'il adore").
+// Defaults to "il" when unset — never returns "iel" per user preference.
+export function getPartnerPronoun(gender: PartnerGender | undefined): "elle" | "il" {
   if (gender === "woman") return "elle";
-  if (gender === "man") return "il";
-  return "iel";
+  return "il";
 }
 
 // ============================================================

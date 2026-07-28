@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.business_signups (
   email TEXT NOT NULL,
   phone TEXT,
   website TEXT NOT NULL,
-  tax_number TEXT NOT NULL,
+  incorporation_name TEXT NOT NULL,
   billing_address TEXT NOT NULL,
   description TEXT,
 
@@ -38,9 +38,26 @@ CREATE TABLE IF NOT EXISTS public.business_signups (
 COMMENT ON TABLE public.business_signups IS
   'Waitlist + onboarding requests from /business inscription form';
 
--- Idempotent guard so re-running this migration adds the tier column if
--- an older version of 001 was already executed.
+-- Idempotent guards so re-running this migration reconciles older
+-- versions of the schema without dropping data.
 ALTER TABLE public.business_signups ADD COLUMN IF NOT EXISTS tier TEXT;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'business_signups'
+      AND column_name = 'tax_number'
+  ) AND NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'business_signups'
+      AND column_name = 'incorporation_name'
+  ) THEN
+    ALTER TABLE public.business_signups RENAME COLUMN tax_number TO incorporation_name;
+  END IF;
+END $$;
 
 -- ============================================================
 -- INDEXES

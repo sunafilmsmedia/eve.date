@@ -376,11 +376,9 @@ function buildUserContextBlock(ctx: UserContext): string {
     const genderLabel =
       p("partnerGender") === "woman"
         ? "femme"
-        : p("partnerGender") === "man"
+        : p("partnerGender") === "man" || !p("partnerGender")
           ? "homme"
-          : p("partnerGender") === "other"
-            ? "personne (non précisé)"
-            : "";
+          : "";
     return [
       `TYPE DE SORTIE : Couple.`,
       `Ton à utiliser : romantique, intentionnel, attentionné.`,

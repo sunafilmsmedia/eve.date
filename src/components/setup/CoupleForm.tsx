@@ -55,7 +55,6 @@ const VIBES = ["Cozy", "Chic", "Romantique", "Fun", "Intime", "Premium"];
 const GENDER_OPTIONS: { value: PartnerGender; label: string }[] = [
   { value: "woman", label: "Une femme" },
   { value: "man", label: "Un homme" },
-  { value: "other", label: "Autre / je préfère pas préciser" },
 ];
 
 export function CoupleForm() {

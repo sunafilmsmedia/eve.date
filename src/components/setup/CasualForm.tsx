@@ -121,7 +121,7 @@ export function CasualForm() {
       </div>
 
       <div>
-        <FieldLabel hint="(ce que tu sais d'iel)">Passions ou intérêts connus</FieldLabel>
+        <FieldLabel hint="(ce que tu sais de la personne)">Passions ou intérêts connus</FieldLabel>
         <TagSelector
           options={KNOWN_INTERESTS}
           selected={knownInterests}

@@ -6,7 +6,7 @@ type Payload = {
   email?: string;
   phone?: string;
   website?: string;
-  tax_number?: string;
+  incorporation_name?: string;
   billing_address?: string;
   description?: string;
   tier?: string;
@@ -21,7 +21,7 @@ const REQUIRED_FIELDS: (keyof Payload)[] = [
   "business_type",
   "email",
   "website",
-  "tax_number",
+  "incorporation_name",
   "billing_address",
 ];
 
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
     email: payload.email!.trim().toLowerCase(),
     phone: payload.phone?.trim() || null,
     website: payload.website!.trim(),
-    tax_number: payload.tax_number!.trim(),
+    incorporation_name: payload.incorporation_name!.trim(),
     billing_address: payload.billing_address!.trim(),
     description: payload.description?.trim() || null,
     tier: tierValue,
