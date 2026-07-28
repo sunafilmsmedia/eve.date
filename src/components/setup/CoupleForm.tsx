@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { type CoupleProfile } from "@/lib/profile";
+import {
+  type CoupleProfile,
+  type PartnerGender,
+  getPartnerPronoun,
+} from "@/lib/profile";
 import { persistProfile } from "./persistProfile";
 import {
   FieldLabel,
   TextInput,
+  TagInput,
   TagSelector,
   SingleSelect,
   Slider,
@@ -37,47 +42,48 @@ const TEMPERAMENTS = [
 ];
 
 const STAGES = [
-  "Début de fréquentation",
-  "Couple récent",
-  "Relation longue",
+  "Début de fréquentation (0-3 mois)",
+  "Couple récent (3-9 mois)",
+  "Couple installé (9 mois – 2 ans)",
+  "Relation longue (2-5 ans)",
+  "Relation très longue (5+ ans)",
   "Mariés / vie commune",
-];
-
-const OCCASIONS = [
-  "Aucune occasion particulière",
-  "Anniversaire de couple",
-  "Anniversaire (personne)",
-  "Saint-Valentin",
-  "Surprise spontanée",
-  "Reconnecter après période chargée",
 ];
 
 const VIBES = ["Cozy", "Chic", "Romantique", "Fun", "Intime", "Premium"];
 
+const GENDER_OPTIONS: { value: PartnerGender; label: string }[] = [
+  { value: "woman", label: "Une femme" },
+  { value: "man", label: "Un homme" },
+  { value: "other", label: "Autre / je préfère pas préciser" },
+];
+
 export function CoupleForm() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [nicknames, setNicknames] = useState<string[]>([]);
+  const [partnerGender, setPartnerGender] = useState<PartnerGender | "">("");
   const [interests, setInterests] = useState<string[]>([]);
   const [temperament, setTemperament] = useState("");
   const [budget, setBudget] = useState(80);
   const [stage, setStage] = useState("");
-  const [occasion, setOccasion] = useState("");
   const [vibe, setVibe] = useState("");
   const [likes, setLikes] = useState<string[]>([]);
   const [dislikes, setDislikes] = useState<string[]>([]);
+
+  const pronoun = getPartnerPronoun(partnerGender || undefined);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const profile: CoupleProfile = {
       type: "couple",
       name,
-      nickname: nickname || undefined,
+      nicknames: nicknames.length ? nicknames : undefined,
+      partnerGender: partnerGender || undefined,
       interests,
       temperament: temperament || undefined,
       budget,
       relationshipStage: stage || undefined,
-      occasion: occasion || undefined,
       vibe: vibe || undefined,
       likes: likes.length ? likes : undefined,
       dislikes: dislikes.length ? dislikes : undefined,
@@ -94,13 +100,38 @@ export function CoupleForm() {
       onSubmit={handleSubmit}
     >
       <div>
-        <FieldLabel>Son prénom *</FieldLabel>
-        <TextInput value={name} onChange={setName} required placeholder="Marie, Alex, Sam..." />
+        <FieldLabel>Ta moitié est *</FieldLabel>
+        <SingleSelect
+          options={GENDER_OPTIONS.map((g) => g.label)}
+          value={
+            partnerGender
+              ? GENDER_OPTIONS.find((g) => g.value === partnerGender)?.label ?? ""
+              : ""
+          }
+          onChange={(label) => {
+            const match = GENDER_OPTIONS.find((g) => g.label === label);
+            setPartnerGender(match ? match.value : "");
+          }}
+        />
       </div>
 
       <div>
-        <FieldLabel>Surnom (optionnel)</FieldLabel>
-        <TextInput value={nickname} onChange={setNickname} placeholder="Chouchou, Bébé d'amour..." />
+        <FieldLabel>Son prénom *</FieldLabel>
+        <TextInput
+          value={name}
+          onChange={setName}
+          required
+          placeholder="Marie, Alex, Sam…"
+        />
+      </div>
+
+      <div>
+        <FieldLabel hint="(sépare par des virgules)">Surnoms</FieldLabel>
+        <TagInput
+          value={nicknames}
+          onChange={setNicknames}
+          placeholder="Chouchou, poussin, lapin…"
+        />
       </div>
 
       <div>
@@ -110,37 +141,63 @@ export function CoupleForm() {
 
       <div>
         <FieldLabel>Son tempérament en couple</FieldLabel>
-        <SingleSelect options={TEMPERAMENTS} value={temperament} onChange={setTemperament} />
+        <SingleSelect
+          options={TEMPERAMENTS}
+          value={temperament}
+          onChange={setTemperament}
+          allowCustom
+          customPlaceholder="Comment tu le/la décrirais ?"
+        />
       </div>
 
       <div>
         <FieldLabel>Stade de votre relation</FieldLabel>
-        <SingleSelect options={STAGES} value={stage} onChange={setStage} />
-      </div>
-
-      <div>
-        <FieldLabel>Occasion spéciale</FieldLabel>
-        <SingleSelect options={OCCASIONS} value={occasion} onChange={setOccasion} />
+        <SingleSelect
+          options={STAGES}
+          value={stage}
+          onChange={setStage}
+          allowCustom
+          customPlaceholder="Décris votre situation…"
+        />
       </div>
 
       <div>
         <FieldLabel>Ambiance recherchée</FieldLabel>
-        <SingleSelect options={VIBES} value={vibe} onChange={setVibe} />
+        <SingleSelect
+          options={VIBES}
+          value={vibe}
+          onChange={setVibe}
+          allowCustom
+          customPlaceholder="Ambiance sur mesure…"
+        />
       </div>
 
       <div>
-        <FieldLabel hint="(optionnel)">Ce qu&apos;iel adore</FieldLabel>
+        <FieldLabel hint="(optionnel)">Ce qu&apos;{pronoun} adore</FieldLabel>
         <TagSelector
-          options={["Restos cachés", "Surprises", "Plein air", "Cocktails", "Films cultes", "Shopping"]}
+          options={[
+            "Restos cachés",
+            "Surprises",
+            "Plein air",
+            "Cocktails",
+            "Films cultes",
+            "Shopping",
+          ]}
           selected={likes}
           onChange={setLikes}
         />
       </div>
 
       <div>
-        <FieldLabel hint="(optionnel)">Ce qu&apos;iel évite</FieldLabel>
+        <FieldLabel hint="(optionnel)">Ce qu&apos;{pronoun} évite</FieldLabel>
         <TagSelector
-          options={["Foule", "Bruit", "Activités publiques", "Surprises", "Soirées tardives"]}
+          options={[
+            "Foule",
+            "Bruit",
+            "Activités publiques",
+            "Surprises",
+            "Soirées tardives",
+          ]}
           selected={dislikes}
           onChange={setDislikes}
         />

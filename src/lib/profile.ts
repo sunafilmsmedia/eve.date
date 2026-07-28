@@ -39,19 +39,26 @@ export const OUTING_TYPES: {
 // Common types
 export type City = "Montréal" | "Laval" | "Brossard" | "Magog" | "Autre";
 
+// Partner gender drives pronoun choice in copy ("elle adore" vs "il adore").
+// "other" keeps the neutral "iel". Undefined = not chosen yet, fallback to "iel".
+export type PartnerGender = "woman" | "man" | "other";
+
 // Profile per outing type
 export type CoupleProfile = {
   type: "couple";
   name: string;
-  nickname?: string;
+  nicknames?: string[];
+  partnerGender?: PartnerGender;
   interests: string[];
   temperament?: string;
   budget: number;
   relationshipStage?: string;
-  occasion?: string;
   vibe?: string;
   likes?: string[];
   dislikes?: string[];
+  // Legacy single nickname — kept only so old localStorage/DB rows still
+  // parse. Read via getDisplayName / normalized into nicknames on hydrate.
+  nickname?: string;
 };
 
 export type CasualDatingProfile = {
@@ -167,13 +174,39 @@ export function getSubjectScript(t: OutingType): string {
   }
 }
 
-// Get display name from any profile type (for /dates page header)
+// Get display name from any profile type (for /dates page header).
+// For couples with multiple nicknames, returns them joined by ", ".
 export function getDisplayName(profile: Profile | null): string | null {
   if (!profile) return null;
   if (profile.type === "couple") {
-    return profile.nickname?.trim() || profile.name?.trim() || null;
+    const list = getCoupleNicknames(profile);
+    if (list.length) return list.join(", ");
+    return profile.name?.trim() || null;
   }
-  return null; // Other types don't have a single "name"
+  return null;
+}
+
+// Normalize legacy `nickname` (string) into the new `nicknames` array,
+// deduped and trimmed. Safe on freshly-created profiles too.
+export function getCoupleNicknames(profile: CoupleProfile): string[] {
+  const raw = profile.nicknames ?? [];
+  const list: string[] = [];
+  for (const n of raw) {
+    const t = n.trim();
+    if (t && !list.includes(t)) list.push(t);
+  }
+  if (profile.nickname) {
+    const t = profile.nickname.trim();
+    if (t && !list.includes(t)) list.push(t);
+  }
+  return list;
+}
+
+// Pronoun for adaptive copy ("ce qu'elle/il/iel adore").
+export function getPartnerPronoun(gender: PartnerGender | undefined): "elle" | "il" | "iel" {
+  if (gender === "woman") return "elle";
+  if (gender === "man") return "il";
+  return "iel";
 }
 
 // ============================================================

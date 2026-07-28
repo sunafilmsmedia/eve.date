@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 type FieldLabelProps = {
   children: React.ReactNode;
   hint?: string;
@@ -96,20 +98,143 @@ type SingleSelectProps = {
   options: string[];
   value: string;
   onChange: (value: string) => void;
+  allowCustom?: boolean;
+  customPlaceholder?: string;
 };
 
-export function SingleSelect({ options, value, onChange }: SingleSelectProps) {
+export function SingleSelect({
+  options,
+  value,
+  onChange,
+  allowCustom,
+  customPlaceholder,
+}: SingleSelectProps) {
+  // Custom mode = the current value is a free-typed string (not in the preset list),
+  // OR the user has explicitly clicked "Autre..." but not yet typed anything.
+  const derivedCustom = !!allowCustom && value !== "" && !options.includes(value);
+  const [customMode, setCustomMode] = useState(derivedCustom);
+  const isCustom = customMode || derivedCustom;
+
   return (
-    <div className="flex flex-wrap gap-2">
-      {options.map((opt) => (
-        <Chip
-          key={opt}
-          active={value === opt}
-          onClick={() => onChange(value === opt ? "" : opt)}
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-2">
+        {options.map((opt) => (
+          <Chip
+            key={opt}
+            active={value === opt && !isCustom}
+            onClick={() => {
+              setCustomMode(false);
+              onChange(value === opt ? "" : opt);
+            }}
+          >
+            {opt}
+          </Chip>
+        ))}
+        {allowCustom && (
+          <Chip
+            active={isCustom}
+            onClick={() => {
+              if (isCustom) {
+                setCustomMode(false);
+                onChange("");
+              } else {
+                setCustomMode(true);
+                if (options.includes(value)) onChange("");
+              }
+            }}
+          >
+            Autre…
+          </Chip>
+        )}
+      </div>
+      {isCustom && (
+        <input
+          type="text"
+          autoFocus
+          placeholder={customPlaceholder ?? "Précise…"}
+          value={options.includes(value) ? "" : value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full px-5 py-3 border-[1.5px] border-rose/30 rounded-xl text-[12px] font-medium tracking-[0.1em] text-charcoal bg-cream outline-none focus:border-rose transition-colors placeholder:text-muted/40"
+        />
+      )}
+    </div>
+  );
+}
+
+// Multi-tag input: type + Enter or comma to add a tag; Backspace on empty
+// input removes the last tag. Paste "a, b, c" splits into 3 tags at once.
+type TagInputProps = {
+  value: string[];
+  onChange: (v: string[]) => void;
+  placeholder?: string;
+};
+
+export function TagInput({ value, onChange, placeholder }: TagInputProps) {
+  const [draft, setDraft] = useState("");
+
+  const commit = (raw: string) => {
+    const parts = raw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (!parts.length) return;
+    const next = [...value];
+    for (const p of parts) if (!next.includes(p)) next.push(p);
+    onChange(next);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const v = e.target.value;
+    if (v.includes(",")) {
+      commit(v);
+      setDraft("");
+    } else {
+      setDraft(v);
+    }
+  };
+
+  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      commit(draft);
+      setDraft("");
+    } else if (e.key === "Backspace" && draft === "" && value.length > 0) {
+      onChange(value.slice(0, -1));
+    }
+  };
+
+  return (
+    <div className="flex flex-wrap gap-2 items-center border-[1.5px] border-rose/20 rounded-xl px-3 py-2.5 bg-cream focus-within:border-rose transition-colors min-h-[52px]">
+      {value.map((tag, i) => (
+        <span
+          key={`${tag}-${i}`}
+          className="inline-flex items-center gap-2 bg-rose/10 text-deep-rose text-[10px] font-bold tracking-[0.1em] px-3 py-1.5 rounded-full normal-case"
         >
-          {opt}
-        </Chip>
+          {tag}
+          <button
+            type="button"
+            onClick={() => onChange(value.filter((_, idx) => idx !== i))}
+            className="text-rose/50 hover:text-rose leading-none cursor-pointer text-[14px]"
+            aria-label={`Retirer ${tag}`}
+          >
+            ×
+          </button>
+        </span>
       ))}
+      <input
+        type="text"
+        value={draft}
+        onChange={handleChange}
+        onKeyDown={handleKey}
+        onBlur={() => {
+          if (draft) {
+            commit(draft);
+            setDraft("");
+          }
+        }}
+        placeholder={value.length === 0 ? placeholder : ""}
+        className="flex-1 min-w-[140px] px-2 py-1.5 text-[12px] font-medium tracking-[0.1em] text-charcoal bg-transparent outline-none placeholder:text-muted/40"
+      />
     </div>
   );
 }

@@ -367,18 +367,34 @@ function buildUserContextBlock(ctx: UserContext): string {
   const p = (k: string) => profile[k];
 
   if (t === "couple") {
+    const nicknamesArr = Array.isArray(p("nicknames"))
+      ? (p("nicknames") as string[]).filter(Boolean)
+      : [];
+    if (p("nickname") && !nicknamesArr.includes(p("nickname") as string)) {
+      nicknamesArr.push(p("nickname") as string);
+    }
+    const genderLabel =
+      p("partnerGender") === "woman"
+        ? "femme"
+        : p("partnerGender") === "man"
+          ? "homme"
+          : p("partnerGender") === "other"
+            ? "personne (non précisé)"
+            : "";
     return [
       `TYPE DE SORTIE : Couple.`,
       `Ton à utiliser : romantique, intentionnel, attentionné.`,
       p("name")
-        ? `Partenaire : ${p("name")}${p("nickname") ? ` (surnom : ${p("nickname")})` : ""}.`
+        ? `Partenaire : ${p("name")}${genderLabel ? ` (${genderLabel})` : ""}${nicknamesArr.length ? ` — surnoms : ${nicknamesArr.join(", ")}` : ""}.`
+        : "",
+      nicknamesArr.length > 0
+        ? `Utilise ces surnoms naturellement dans tes réponses quand ça sonne juste ; l'utilisateur peut aussi te demander une idée pour un surnom précis (ex. "une date pour Poussin").`
         : "",
       p("interests") && (p("interests") as string[]).length
         ? `Passions : ${(p("interests") as string[]).join(", ")}.`
         : "",
       p("temperament") ? `Tempérament : ${p("temperament")}.` : "",
       p("relationshipStage") ? `Stade de la relation : ${p("relationshipStage")}.` : "",
-      p("occasion") ? `Occasion : ${p("occasion")}.` : "",
       p("vibe") ? `Ambiance recherchée : ${p("vibe")}.` : "",
       p("likes") && (p("likes") as string[]).length
         ? `Aime : ${(p("likes") as string[]).join(", ")}.`
