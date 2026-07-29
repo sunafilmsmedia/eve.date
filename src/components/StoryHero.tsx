@@ -10,7 +10,7 @@ export function StoryHero() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 30%, rgba(200, 114, 90, 0.12) 0%, transparent 55%), radial-gradient(ellipse at 20% 90%, rgba(201, 169, 110, 0.10) 0%, transparent 50%)",
+            "radial-gradient(ellipse at 50% 25%, rgba(200, 114, 90, 0.14) 0%, transparent 55%), radial-gradient(ellipse at 20% 90%, rgba(201, 169, 110, 0.10) 0%, transparent 50%)",
         }}
       />
 
@@ -38,39 +38,28 @@ export function StoryHero() {
         </div>
       </nav>
 
-      {/* Story hero */}
-      <section className="relative px-6 py-[80px] md:py-[110px]">
-        <div className="max-w-[780px] mx-auto text-center">
-          <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-8">
-            Le moment qu&apos;on connaît tous
+      {/* Promise + CTA — top hero */}
+      <section className="relative px-6 pt-[70px] pb-[60px] md:pt-[100px] md:pb-[80px]">
+        <div className="max-w-[820px] mx-auto text-center">
+          <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-6">
+            La promesse
           </p>
 
-          <p className="text-[15px] sm:text-[17px] font-medium tracking-[0.06em] text-charcoal mb-4 leading-[1.7] normal-case">
-            Vendredi 17 h. Ta moitié te demande :
-          </p>
-          <p className="font-script text-[44px] sm:text-[64px] md:text-[80px] text-rose mb-10 leading-[0.95]">
-            « t&apos;as réservé ? »
-          </p>
-
-          <p className="text-[13px] sm:text-[15px] tracking-[0.08em] text-charcoal/85 mb-3 leading-[1.85] normal-case max-w-[560px] mx-auto">
-            Tu ouvres TikTok. Puis Google. Puis Maps. Puis ChatGPT.
-          </p>
-          <p className="text-[13px] sm:text-[15px] tracking-[0.08em] text-muted mb-14 leading-[1.85] normal-case max-w-[560px] mx-auto">
-            45 minutes plus tard, rien n&apos;est décidé.
-          </p>
-
-          <p className="text-[11px] font-bold tracking-[0.32em] text-rose mb-3">
-            Eve règle ça.
-          </p>
-          <h1 className="font-sans text-[28px] sm:text-[36px] md:text-[44px] font-extrabold tracking-[0.02em] text-charcoal mb-8 leading-[1.15]">
+          <h1 className="font-sans text-[30px] sm:text-[42px] md:text-[52px] font-extrabold tracking-[0.01em] text-charcoal mb-3 leading-[1.15]">
             En moins de{" "}
-            <Script className="text-rose text-[54px] sm:text-[72px] md:text-[92px] inline-block leading-[0.85]">
+            <Script className="text-rose text-[58px] sm:text-[78px] md:text-[100px] inline-block leading-[0.85]">
               2 minutes
             </Script>
-            ,<br />
-            Eve te propose un plan.
+            ,
           </h1>
-          <p className="text-[12px] sm:text-[13px] tracking-[0.1em] text-muted mb-12 leading-[1.9] normal-case max-w-[540px] mx-auto">
+          <h2 className="font-sans text-[30px] sm:text-[42px] md:text-[52px] font-extrabold tracking-[0.01em] text-charcoal mb-8 leading-[1.15]">
+            <Script className="text-rose text-[58px] sm:text-[78px] md:text-[100px] inline-block leading-[0.85] mr-2">
+              Eve
+            </Script>
+            te propose un plan.
+          </h2>
+
+          <p className="text-[12px] sm:text-[14px] tracking-[0.1em] text-muted mb-10 leading-[1.9] normal-case max-w-[560px] mx-auto">
             Adapté à ton budget, ta ville, la saison et les personnes avec qui tu sors.
           </p>
 
@@ -83,6 +72,38 @@ export function StoryHero() {
 
           <p className="text-[9px] tracking-[0.24em] text-muted mt-6 leading-[1.7]">
             1 question gratuite · Aucune carte requise
+          </p>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="relative max-w-[420px] mx-auto px-6">
+        <div className="h-px bg-gradient-to-r from-transparent via-rose/25 to-transparent" />
+      </div>
+
+      {/* The moment — story below */}
+      <section className="relative px-6 py-[70px] md:py-[90px]">
+        <div className="max-w-[720px] mx-auto text-center">
+          <p className="text-[10px] font-bold tracking-[0.32em] text-rose mb-8">
+            Le moment qu&apos;on connaît tous
+          </p>
+
+          <p className="text-[14px] sm:text-[16px] font-medium tracking-[0.06em] text-charcoal mb-3 leading-[1.7] normal-case">
+            Vendredi 17 h. Ta moitié te demande :
+          </p>
+          <p className="font-script text-[42px] sm:text-[60px] md:text-[74px] text-rose mb-9 leading-[0.95]">
+            « t&apos;as réservé ? »
+          </p>
+
+          <p className="text-[12px] sm:text-[14px] tracking-[0.08em] text-charcoal/80 mb-2 leading-[1.9] normal-case max-w-[520px] mx-auto">
+            Tu ouvres TikTok. Puis Google. Puis Maps. Puis ChatGPT.
+          </p>
+          <p className="text-[12px] sm:text-[14px] tracking-[0.08em] text-muted mb-8 leading-[1.9] normal-case max-w-[520px] mx-auto">
+            45 minutes plus tard, rien n&apos;est décidé.
+          </p>
+
+          <p className="font-script text-[36px] sm:text-[48px] text-charcoal leading-[0.9]">
+            Eve règle ça.
           </p>
         </div>
       </section>
