@@ -11,7 +11,6 @@ import { persistProfile } from "./persistProfile";
 import {
   FieldLabel,
   TextInput,
-  TagInput,
   TagSelector,
   SingleSelect,
   Slider,
@@ -60,7 +59,6 @@ const GENDER_OPTIONS: { value: PartnerGender; label: string }[] = [
 export function CoupleForm() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [nicknames, setNicknames] = useState<string[]>([]);
   const [partnerGender, setPartnerGender] = useState<PartnerGender | "">("");
   const [interests, setInterests] = useState<string[]>([]);
   const [temperament, setTemperament] = useState("");
@@ -77,7 +75,6 @@ export function CoupleForm() {
     const profile: CoupleProfile = {
       type: "couple",
       name,
-      nicknames: nicknames.length ? nicknames : undefined,
       partnerGender: partnerGender || undefined,
       interests,
       temperament: temperament || undefined,
@@ -138,15 +135,6 @@ export function CoupleForm() {
           onChange={setName}
           required
           placeholder="Marie, Alex, Sam…"
-        />
-      </div>
-
-      <div>
-        <FieldLabel hint="(sépare par des virgules)">Surnoms</FieldLabel>
-        <TagInput
-          value={nicknames}
-          onChange={setNicknames}
-          placeholder="Chouchou, poussin, lapin…"
         />
       </div>
 

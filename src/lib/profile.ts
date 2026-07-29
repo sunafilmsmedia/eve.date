@@ -176,17 +176,11 @@ export function getSubjectScript(t: OutingType): string {
 }
 
 // Get display name from any profile type (for /dates page header).
-// For couples with multiple nicknames, rotates through them ONE at a time
-// on a daily cadence (index tied to UTC day), so the display feels alive
-// but stays stable within a session.
+// For couples: always the partner's first name — nicknames were dropped
+// from the UI per user preference. Legacy nickname fields are ignored.
 export function getDisplayName(profile: Profile | null): string | null {
   if (!profile) return null;
   if (profile.type === "couple") {
-    const list = getCoupleNicknames(profile);
-    if (list.length) {
-      const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-      return list[dayIndex % list.length];
-    }
     return profile.name?.trim() || null;
   }
   return null;

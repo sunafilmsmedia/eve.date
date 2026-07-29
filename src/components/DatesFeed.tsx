@@ -80,7 +80,7 @@ const HERO_COPY: Record<
   couple: {
     label: "Sélection couple",
     scriptWord: "moments",
-    desc: "Filtre par saison et type de soirée. Demande à Eve si tu cherches une idée sur mesure autour d'un de ses surnoms.",
+    desc: "Filtre par saison et type de soirée. Demande à Eve une date sur mesure quand tu veux quelque chose de précis.",
   },
   casual_dating: {
     label: "Casual dating",
