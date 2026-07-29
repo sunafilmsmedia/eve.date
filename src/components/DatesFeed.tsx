@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Script } from "./Script";
 import { EveChat } from "./EveChat";
+import { DatesDrawer } from "./DatesDrawer";
 import { createClient } from "@/utils/supabase/client";
 import {
   DATES,
@@ -109,18 +110,15 @@ export function DatesFeed() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    // Auth gate — account is now mandatory
+    // No auth gate — anonymous users can chat 1 message before being asked
+    // to create an account. Personalization (outingType + profile) is
+    // additive and simply improves the experience if present.
     if (
       !process.env.NEXT_PUBLIC_SUPABASE_URL ||
       !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     ) {
-      // No Supabase configured — local dev fallback, allow through
-      const t = loadOutingType();
-      if (!t) {
-        router.push("/start");
-        return;
-      }
-      setOutingType(t);
+      // Local dev fallback — read whatever's in localStorage
+      setOutingType(loadOutingType());
       setProfile(loadProfile());
       setReady(true);
       return;
@@ -129,35 +127,22 @@ export function DatesFeed() {
     const supabase = createClient();
     (async () => {
       const { data } = await supabase.auth.getUser();
-      if (!data.user) {
-        router.replace("/login?next=/dates");
-        return;
+      if (data.user) {
+        setUserEmail(data.user.email ?? null);
+        const dbProfile = await loadProfileFromSupabase(supabase, data.user.id);
+        if (dbProfile) {
+          saveProfile(dbProfile);
+          saveOutingType(dbProfile.type);
+          setOutingType(dbProfile.type);
+          setProfile(dbProfile);
+          setReady(true);
+          return;
+        }
       }
-      setUserEmail(data.user.email ?? null);
-
-      // Prefer Supabase profile; fall back to localStorage
-      const dbProfile = await loadProfileFromSupabase(supabase, data.user.id);
-      if (dbProfile) {
-        saveProfile(dbProfile);
-        saveOutingType(dbProfile.type);
-        setOutingType(dbProfile.type);
-        setProfile(dbProfile);
-        setReady(true);
-        return;
-      }
-
-      const t = loadOutingType();
-      if (!t) {
-        router.push("/start");
-        return;
-      }
-      const p = loadProfile();
-      if (!p) {
-        router.push("/avatar");
-        return;
-      }
-      setOutingType(t);
-      setProfile(p);
+      // Not authed OR authed without a saved profile — fall back to
+      // whatever's in localStorage, still render the chat.
+      setOutingType(loadOutingType());
+      setProfile(loadProfile());
       setReady(true);
     })();
 
@@ -172,9 +157,9 @@ export function DatesFeed() {
   const hasAccount = userEmail !== null;
 
   const filteredDates = useMemo(() => {
-    if (!outingType) return [];
+    // Anonymous users get the full catalogue (no forCouples/forSingles filter)
+    // — Anon = we don't know who they're planning for, so show everything.
     return DATES.filter((d) => {
-      // Couple: show forCouples. Casual: show forSingles. Double/Friends: show all.
       if (outingType === "couple" && !d.forCouples) return false;
       if (outingType === "casual_dating" && !d.forSingles) return false;
       if (season !== "all" && !d.seasons.includes(season) && !d.seasons.includes("all"))
@@ -194,7 +179,7 @@ export function DatesFeed() {
     return map;
   }, [filteredDates]);
 
-  if (!ready || !outingType) {
+  if (!ready) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <p className="font-script text-rose text-[28px]">un instant</p>
@@ -202,12 +187,19 @@ export function DatesFeed() {
     );
   }
 
+  // Anonymous or authed-without-profile users get sensible defaults so the
+  // chat + catalogue still render. Personalization kicks in once outing
+  // type + profile are saved.
+  const effectiveType: OutingType = outingType ?? "couple";
   const displayName = getDisplayName(profile);
-  const situations = SITUATIONS_PER_TYPE[outingType];
-  const hero = HERO_COPY[outingType];
+  const situations = SITUATIONS_PER_TYPE[effectiveType];
+  const hero = HERO_COPY[effectiveType];
+  const needsProfile = !profile;
+  const needsOutingType = !outingType;
 
   return (
     <main className="min-h-screen px-6 py-16">
+      <DatesDrawer dates={filteredDates} />
       <div className="max-w-[1100px] mx-auto">
         {/* Top nav */}
         <div className="flex items-center justify-between mb-12 flex-wrap gap-4">
@@ -221,19 +213,23 @@ export function DatesFeed() {
             </span>
           </Link>
           <div className="flex items-center gap-5 flex-wrap">
-            <Link
-              href="/avatar"
-              className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors"
-            >
-              Modifier le profil
-            </Link>
-            <Link
-              href="/start"
-              className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors"
-            >
-              Changer de type →
-            </Link>
-            {hasAccount && userEmail && (
+            {hasAccount && (
+              <Link
+                href="/avatar"
+                className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors"
+              >
+                Modifier le profil
+              </Link>
+            )}
+            {hasAccount && (
+              <Link
+                href="/start"
+                className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors"
+              >
+                Changer de type →
+              </Link>
+            )}
+            {hasAccount && userEmail ? (
               <div className="flex items-center gap-3 pl-5 border-l border-rose/15">
                 <span className="text-[10px] tracking-[0.14em] text-muted">
                   {userEmail.split("@")[0]}
@@ -254,9 +250,47 @@ export function DatesFeed() {
                   Déconnexion
                 </button>
               </div>
+            ) : (
+              <div className="flex items-center gap-3 pl-5 border-l border-rose/15">
+                <Link
+                  href="/login?next=/dates"
+                  className="text-[10px] font-bold tracking-[0.18em] text-muted hover:text-rose transition-colors"
+                >
+                  Connexion
+                </Link>
+                <Link
+                  href="/signup?next=/dates"
+                  className="text-[10px] font-bold tracking-[0.22em] bg-rose text-white px-4 py-2 rounded-full hover:bg-deep-rose transition-colors"
+                >
+                  Créer un compte
+                </Link>
+              </div>
             )}
           </div>
         </div>
+
+        {/* Persistent avatar suggestion (anon or authed-without-profile) */}
+        {(needsProfile || needsOutingType) && (
+          <div className="bg-gradient-to-br from-light-gold/60 to-blush/40 border border-gold/40 rounded-[20px] p-5 sm:p-6 mb-10 flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex-1 min-w-[220px]">
+              <p className="text-[10px] font-bold tracking-[0.28em] text-deep-rose mb-1.5">
+                ✨ Personnalise Eve
+              </p>
+              <p className="font-script text-[26px] sm:text-[30px] text-charcoal leading-[1] mb-1.5">
+                Crée ton avatar
+              </p>
+              <p className="text-[10px] tracking-[0.12em] text-muted leading-[1.7] normal-case">
+                Eve va adapter chaque suggestion à ton budget, ta ville, ta situation et ta personne.
+              </p>
+            </div>
+            <Link
+              href={hasAccount ? (needsOutingType ? "/start" : "/avatar") : "/signup?next=/start"}
+              className="bg-rose text-white px-6 py-3.5 rounded-full text-[10px] font-bold tracking-[0.22em] hover:bg-deep-rose hover:-translate-y-0.5 transition-all shrink-0"
+            >
+              {hasAccount ? "Continuer →" : "Commencer →"}
+            </Link>
+          </div>
+        )}
 
         {/* Chat with Eve at the top */}
         <EveChat outingType={outingType} profile={profile} hasAccount={hasAccount} />
@@ -402,7 +436,10 @@ export function DatesFeed() {
 
 function DateCard({ date }: { date: DateIdea }) {
   return (
-    <div className="rounded-[22px] overflow-hidden border border-rose/15 bg-cream hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(200,114,90,0.15)] transition-all">
+    <div
+      id={date.id}
+      className="rounded-[22px] overflow-hidden border border-rose/15 bg-cream hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(200,114,90,0.15)] transition-all scroll-mt-24"
+    >
       <div className={`${HEADER_VARIANTS[date.variant]} px-7 pt-[30px] pb-6`}>
         <div className="inline-block bg-white/20 text-white text-[9px] font-bold tracking-[0.2em] px-3 py-1 rounded-full mb-4">
           {date.city}

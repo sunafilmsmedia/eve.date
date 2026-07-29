@@ -42,7 +42,7 @@ const SUGGESTIONS_BY_TYPE: Record<OutingType, string[]> = {
   ],
 };
 
-const MAX_FREE_MESSAGES = 7;
+const MAX_FREE_MESSAGES = 1;
 const COUNT_STORAGE_KEY = "eve_chat_user_messages";
 
 export function EveChat({ outingType, profile, hasAccount = false }: EveChatProps) {
@@ -201,28 +201,22 @@ export function EveChat({ outingType, profile, hasAccount = false }: EveChatProp
           {limitReached ? (
             <div className="border-t border-rose/10 bg-gradient-to-br from-light-gold/40 to-blush/30 px-7 py-9 text-center">
               <p className="font-script text-[44px] text-rose leading-none mb-3">
-                À toi maintenant
+                Crée ton compte pour continuer
               </p>
               <p className="text-[10px] tracking-[0.18em] text-charcoal mb-2">
-                Tu as utilisé tes {MAX_FREE_MESSAGES} conversations gratuites avec Eve.
+                Ta première question est gratuite. Pour aller plus loin, il te faut un compte.
               </p>
               <p className="text-[10px] tracking-[0.14em] text-muted leading-[1.8] mb-6 max-w-md mx-auto">
-                Crée un compte gratuit pour continuer à discuter, garder ton historique et synchroniser entre tes appareils.
+                Ça prend 30 secondes. Eve va aussi te demander qui t&apos;accompagne pour personnaliser toutes ses idées.
               </p>
               <div className="flex gap-3 justify-center flex-wrap items-center">
-                <GoogleSignInButton next="/dates" label="Continuer avec Google" />
-                <button
-                  onClick={() => {
-                    if (typeof window !== "undefined") {
-                      localStorage.removeItem(COUNT_STORAGE_KEY);
-                    }
-                    setUsedMessages(0);
-                    setMessages([]);
-                  }}
-                  className="text-[10px] font-bold tracking-[0.22em] text-muted hover:text-rose transition-colors cursor-pointer px-4"
+                <a
+                  href="/signup?next=/dates"
+                  className="inline-block bg-rose text-white px-7 py-3.5 rounded-full text-[11px] font-bold tracking-[0.22em] hover:bg-deep-rose transition-colors"
                 >
-                  ↺ Réinitialiser (dev)
-                </button>
+                  Créer mon compte →
+                </a>
+                <GoogleSignInButton next="/dates" label="Ou avec Google" variant="outline" />
               </div>
             </div>
           ) : (
@@ -315,7 +309,7 @@ export function EveChat({ outingType, profile, hasAccount = false }: EveChatProp
 
         {isEmpty && !hasAccount && (
           <p className="text-center text-[9px] tracking-[0.22em] text-muted mt-5 leading-[1.7]">
-            {MAX_FREE_MESSAGES} conversations gratuites · Connecte-toi pour continuer après
+            1 question gratuite · Aucune carte requise
           </p>
         )}
       </div>
